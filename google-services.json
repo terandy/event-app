@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "770399984916",
+    "project_id": "ysp-app-294f8",
+    "storage_bucket": "ysp-app-294f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770399984916:android:7bd9d566e3c1f6f650b601",
+        "android_client_info": {
+          "package_name": "com.terandy.yspapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770399984916-dr1rtgmqtselh3k5ven70i2aru4es7v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAaAiJLxqOEwsVpYeSGrA19VaI_vt4udo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770399984916-dr1rtgmqtselh3k5ven70i2aru4es7v6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770399984916-34bfc4rp19thf1eqtndcr8heq41s884n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ysp.events"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770399984916:android:1d830efcce074b0150b601",
+        "android_client_info": {
+          "package_name": "com.ysp.events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770399984916-dr1rtgmqtselh3k5ven70i2aru4es7v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAaAiJLxqOEwsVpYeSGrA19VaI_vt4udo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770399984916-dr1rtgmqtselh3k5ven70i2aru4es7v6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770399984916-34bfc4rp19thf1eqtndcr8heq41s884n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ysp.events"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

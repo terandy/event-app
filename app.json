@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ysp-app",
+    "name": "YSP Pilot",
     "slug": "ysp-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,22 +8,24 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#5F40F7"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.terandy.yspapp",
+      "buildNumber": "1.0.3"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#5F40F7"
+      },
+      "package": "com.terandy.yspapp",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
