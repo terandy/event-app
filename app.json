@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.terandy.yspapp",
-      "buildNumber": "1.0.3"
+      "buildNumber": "1.0.9"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +25,8 @@
         "backgroundColor": "#5F40F7"
       },
       "package": "com.terandy.yspapp",
-      "versionCode": 3
+      "versionCode": 9,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
