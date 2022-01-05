@@ -1,18 +1,13 @@
 import { useContext } from 'react';
 import { View, Text, Button } from 'react-native';
 import { NotificationContext } from '../../context';
+import { Layout } from '../../components';
 
 function EventListScreen() {
   const { expoPushToken, sendPushNotification } =
     useContext(NotificationContext);
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
+    <Layout>
       <Text>Home Screen</Text>
       <View
         style={{
@@ -32,7 +27,7 @@ function EventListScreen() {
           />
         </View>
       </View>
-    </View>
+    </Layout>
   );
 }
 

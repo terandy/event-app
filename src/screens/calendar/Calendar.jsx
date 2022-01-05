@@ -1,10 +1,11 @@
 import { View, Text } from 'react-native';
+import { Layout } from '../../components';
 
 function CalendarScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Layout>
       <Text>Calendar Screen</Text>
-    </View>
+    </Layout>
   );
 }
 

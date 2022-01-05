@@ -25,10 +25,9 @@ const DrawerNavigator = ({
       <View style={[{ flex: 1 }, contentStyle]}>
         {state.routes.map((route, i) => {
           return i === state.index ? (
-            <SafeAreaView key={route.key} style={[StyleSheet.absoluteFill]}>
-              <View style={{ width: '100%', height: HEADER_HEIGHT }} />
+            <View key={route.key} style={[StyleSheet.absoluteFill]}>
               {descriptors[route.key].render()}
-            </SafeAreaView>
+            </View>
           ) : null;
         })}
       </View>

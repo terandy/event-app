@@ -1,16 +1,11 @@
 import { View, Text } from 'react-native';
+import { Layout } from '../../components';
 
 function InfoScreen() {
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
+    <Layout>
       <Text>Info Screen</Text>
-    </View>
+    </Layout>
   );
 }
 
