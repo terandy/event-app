@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { View, Text, Button } from 'react-native';
 import { NotificationContext } from '../../context';
 
-function HomeScreen() {
+function EventListScreen() {
   const { expoPushToken, sendPushNotification } =
     useContext(NotificationContext);
   return (
@@ -22,16 +22,18 @@ function HomeScreen() {
         }}
       >
         <Text>Your expo push token: {expoPushToken}</Text>
-        <Button
-          title="Press to Send Notification"
-          disabled={!expoPushToken}
-          onPress={async () => {
-            await sendPushNotification(expoPushToken);
-          }}
-        />
+        <View style={{}}>
+          <Button
+            title="Press to Send Notification"
+            disabled={!expoPushToken}
+            onPress={async () => {
+              await sendPushNotification(expoPushToken);
+            }}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
-export default HomeScreen;
+export default EventListScreen;

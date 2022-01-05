@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { CalendarScreen, HomeScreen } from '../screens';
+import { CalendarScreen, EventListScreen } from '../screens';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -19,8 +19,8 @@ function TabNavigator() {
       sceneContainerStyle={{ backgroundColor: 'white' }}
     >
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="EventList"
+        component={EventListScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { TabNavigator } from './src/navigator';
+import { MyNavigator } from './src/navigator';
 import { NotificationProvider } from './src/context';
 
 function App() {
   return (
     <NotificationProvider>
       <NavigationContainer>
-        <TabNavigator />
+        <MyNavigator />
       </NavigationContainer>
     </NotificationProvider>
   );
