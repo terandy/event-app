@@ -1,20 +1,14 @@
 import { useState, useRef } from 'react';
-import {
-  Platform,
-  View,
-  Animated,
-  Button,
-  StatusBar,
-  StyleSheet
-} from 'react-native';
+import { Platform, View, Animated, StatusBar, StyleSheet } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-const DRAWER_HEIGHT = 600;
-export const HEADER_HEIGHT = 48;
+import { useTheme } from 'react-native-paper';
+import { DRAWER_HEIGHT, HEADER_HEIGHT } from '../../data';
+import { IconButton, Button } from '../../elements';
 
 const Drawer = ({ navigation, descriptors, state }) => {
+  const { colors } = useTheme();
   const [status, setStatus] = useState('close');
   const anim = useRef(new Animated.Value(0)).current;
   const animOptions = {
@@ -71,8 +65,7 @@ const Drawer = ({ navigation, descriptors, state }) => {
       {status === 'close' && (
         <SafeAreaView>
           <View style={styles.header}>
-            <Button title="open" onPress={handleOpen} />
-            <Button title="open" onPress={handleOpen} />
+            <Button title="open" size="small" onPress={handleOpen} />
           </View>
         </SafeAreaView>
       )}
@@ -83,6 +76,7 @@ const Drawer = ({ navigation, descriptors, state }) => {
               styles.drawer,
               {
                 height: DRAWER_HEIGHT,
+                backgroundColor: colors.p1,
                 transform: [
                   {
                     translateY: anim.interpolate(animOptions)
@@ -91,8 +85,12 @@ const Drawer = ({ navigation, descriptors, state }) => {
               }
             ]}
           >
-            <View style={[styles.gap, styles.close]}>
-              <Button title="close" onPress={handleClose} />
+            <View style={[styles.close]}>
+              <IconButton
+                icon="close"
+                onPress={handleClose}
+                color={colors.p4}
+              />
             </View>
             {state.routes.map(
               (route) =>
@@ -101,6 +99,11 @@ const Drawer = ({ navigation, descriptors, state }) => {
                     <Button
                       title={descriptors[route.key].options.title || route.name}
                       onPress={() => handleButtonPress(route)}
+                      color={colors.p1}
+                      style={{
+                        backgroundColor: colors.p4,
+                        marginBottom: 28
+                      }}
                     />
                   </View>
                 )
@@ -108,7 +111,9 @@ const Drawer = ({ navigation, descriptors, state }) => {
             <Button
               title="Logout"
               onPress={handleLogout}
+              color={colors.p1}
               style={{
+                backgroundColor: colors.p4,
                 marginBottom: 28
               }}
             />
@@ -128,17 +133,21 @@ const styles = StyleSheet.create({
     padding: 32,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 32 : 50,
     display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'blue'
+    alignItems: 'center'
   },
-  gap: { marginBottom: 32 },
+  gap: { marginBottom: 16, width: '100%' },
   header: {
     height: HEADER_HEIGHT,
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row'
   },
-  close: { justifyContent: 'flex-end', width: '100%', flexDirection: 'row' }
+  close: {
+    marginBottom: 32,
+    justifyContent: 'flex-end',
+    width: '100%',
+    flexDirection: 'row'
+  }
 });
 
 export default Drawer;

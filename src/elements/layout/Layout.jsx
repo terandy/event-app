@@ -1,10 +1,10 @@
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HEADER_HEIGHT } from '../navigator/my-navigator/Drawer';
+import { HEADER_HEIGHT } from '../../data';
 
 const Layout = ({ children }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={[{ flex: 1 }]}>
       <View style={{ width: '100%', height: HEADER_HEIGHT }} />
       {children}
     </SafeAreaView>

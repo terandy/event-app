@@ -1,22 +1,24 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from 'react-native-paper';
 import { CalendarScreen, EventListScreen } from '../screens';
 
 const Tab = createMaterialTopTabNavigator();
 
 function TabNavigator() {
+  const { colors } = useTheme();
   return (
     <Tab.Navigator
       initialRouteName="Home"
       labeled={false}
       tabBarPosition="bottom"
       screenOptions={{
-        tabBarActiveTintColor: 'blue',
-        tabBarInactiveTintColor: 'grey',
+        tabBarActiveTintColor: colors.p1,
+        tabBarInactiveTintColor: colors.g2,
         tabBarIndicatorStyle: { height: 0 },
         tabBarShowLabel: false
       }}
-      sceneContainerStyle={{ backgroundColor: 'white' }}
+      sceneContainerStyle={{ backgroundColor: colors.w1 }}
     >
       <Tab.Screen
         name="EventList"

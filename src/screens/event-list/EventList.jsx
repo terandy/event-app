@@ -1,14 +1,14 @@
 import { useContext } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
 import { NotificationContext } from '../../context';
-import { Layout } from '../../components';
+import { Button, Title, Layout } from '../../elements';
 
 function EventListScreen() {
   const { expoPushToken, sendPushNotification } =
     useContext(NotificationContext);
   return (
     <Layout>
-      <Text>Home Screen</Text>
+      <Title>Home Screen</Title>
       <View
         style={{
           flex: 1,
@@ -17,10 +17,11 @@ function EventListScreen() {
         }}
       >
         <Text>Your expo push token: {expoPushToken}</Text>
-        <View style={{}}>
+        <View>
           <Button
             title="Press to Send Notification"
             disabled={!expoPushToken}
+            size="small"
             onPress={async () => {
               await sendPushNotification(expoPushToken);
             }}

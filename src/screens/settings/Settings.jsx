@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native';
-import { Layout } from '../../components';
+import { Title, Layout } from '../../elements';
 
 function SettingsScreen() {
   return (
     <Layout>
-      <Text>Settings Screen</Text>
+      <Title>Settings Screen</Title>
     </Layout>
   );
 }

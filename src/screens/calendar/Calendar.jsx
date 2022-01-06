@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native';
-import { Layout } from '../../components';
+import { Title, Layout } from '../../elements';
 
 function CalendarScreen() {
   return (
     <Layout>
-      <Text>Calendar Screen</Text>
+      <Title>Calendar Screen</Title>
     </Layout>
   );
 }
