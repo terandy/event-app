@@ -4,30 +4,41 @@ import { View, Text } from 'react-native';
 import { NotificationContext } from '../../context';
 import { Button, Title, Layout } from '../../elements';
 import { Loading } from '../../components';
-import { getEvents } from '../../api';
+import { fetchEvents } from '../../firebase-api';
 
 function EventListScreen() {
   const [isLoading, setIsLoading] = useState(false);
-  const [events, setEvents] = useState({});
-  console.log(events);
+  const [events, setEvents] = useState([]);
+  console.log({ events });
   const { expoPushToken, sendPushNotification } =
     useContext(NotificationContext);
 
+  const currentTime = new Date();
+  const filterEvents = (events) =>
+    events.filter((event) => {
+      return event.frequency !== '' || event.dateTime.toDate() >= currentTime;
+    });
+
   useEffect(() => {
-    const callback = (doc) => {
-      if (doc.data()) {
-        setEvents(doc.data());
-        setIsLoading(false);
-      } else {
+    const unsubscribe = fetchEvents(
+      (snapshot) => {
+        if (snapshot.size) {
+          let events = snapshot.docs.map((doc) => doc.data());
+          const filteredEvents = filterEvents(events);
+          setEvents(filteredEvents);
+          setIsLoading(false);
+        } else {
+          setEvents([]);
+          setIsLoading(false);
+        }
+      },
+      (err) => {
+        console.log({ err });
+        setEvents([]);
         setIsLoading(false);
       }
-    };
-    const error = () => {
-      console.log('Error getting document:', error);
-      setIsLoading(false);
-    };
-    const unsubscribe = getEvents(callback, error);
-    return unsubscribe;
+    );
+    return () => unsubscribe();
   }, []);
 
   if (isLoading) {

@@ -1,37 +1,38 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
+import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
-import * as firebase from 'firebase';
-import Constants from 'expo-constants';
-
-import { NotificationProvider } from './src/context';
-import { MyNavigator } from './src/navigator';
+import { NotificationProvider, AuthProvider, AuthContext } from './src/context';
+import { MyNavigator, AuthNavigator } from './src/navigator';
 import { theme } from './src/theme';
+import { Loading } from './src/components';
 
-const firebaseConfig = {
-  apiKey: Constants.manifest.extra.apiKey,
-  authDomain: Constants.manifest.extra.authDomain,
-  projectId: Constants.manifest.extra.projectId,
-  storageBucket: Constants.manifest.extra.storageBucket,
-  messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  measurementId: Constants.manifest.extra.measurementId,
-  appId: Constants.manifest.extra.appId
-};
-
-const hasNotBeenInitialized = firebase.apps?.length === 0;
-if (hasNotBeenInitialized) {
-  firebase.initializeApp(firebaseConfig);
-}
+LogBox.ignoreLogs([
+  'AsyncStorage has been extracted from react-native core and will be removed in a future release'
+]);
+LogBox.ignoreLogs(['Setting a timer']);
 
 function App() {
-  return (
+  const { hasAuthState, currentUser } = useContext(AuthContext);
+  const isLoggedIn = !!currentUser;
+
+  if (!hasAuthState) {
+    return <Loading />;
+  }
+  if (!isLoggedIn) {
+    return <AuthNavigator />;
+  }
+  return <MyNavigator />;
+}
+
+export default () => (
+  <AuthProvider>
     <NotificationProvider>
       <NavigationContainer>
         <PaperProvider theme={theme}>
-          <MyNavigator />
+          <App />
         </PaperProvider>
       </NavigationContainer>
     </NotificationProvider>
-  );
-}
-export default App;
+  </AuthProvider>
+);

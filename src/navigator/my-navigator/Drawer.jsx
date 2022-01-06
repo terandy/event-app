@@ -1,21 +1,31 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { Platform, View, Animated, StatusBar, StyleSheet } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from 'react-native-paper';
+
+import { AuthContext } from '../../context';
+import { apiLogout } from '../../firebase-api';
 import { DRAWER_HEIGHT, HEADER_HEIGHT } from '../../data';
 import { IconButton, Button } from '../../elements';
 
 const Drawer = ({ navigation, descriptors, state }) => {
   const { colors } = useTheme();
+  const { setCurrentUser } = useContext(AuthContext);
   const [status, setStatus] = useState('close');
   const anim = useRef(new Animated.Value(0)).current;
   const animOptions = {
     inputRange: [0, 1],
     outputRange: [-DRAWER_HEIGHT, 0]
   };
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    console.log('logout');
+    apiLogout()
+      .then(() => setCurrentUser(null))
+      .catch((err) => console.log(err));
+  };
+
   const handleOpen = () => {
     setStatus('transition');
     Animated.timing(anim, {
