@@ -1,32 +1,34 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useTheme } from 'react-native-paper';
 
-const SelectButton = ({
-  isActive = false,
+const PillButton = ({
+  isActive = true,
   title,
   onPress,
   color,
   style,
   icon
 }) => {
+  const { colors } = useTheme();
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
         {
-          backgroundColor: color,
+          backgroundColor: color || colors.p1,
           opacity: isActive ? 1 : 0.25,
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: 7,
           flexDirection: 'row',
+          borderRadius: 7,
           padding: 8
         },
         style
       ]}
     >
-      {icon && <Icons name={icon} color={'white'} size={16} />}
+      {icon && <Icons name={icon} color={colors.w1} size={16} />}
       <Text
         style={{
           color: 'white',
@@ -41,4 +43,4 @@ const SelectButton = ({
   );
 };
 
-export default SelectButton;
+export default PillButton;

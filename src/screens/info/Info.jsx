@@ -52,110 +52,105 @@ const Info = () => {
     Platform.os === 'ios'
       ? 'ca-app-pub-5055103069379901/3913750773'
       : 'ca-app-pub-5055103069379901/2531536284';
-  const showInterstitial = async () => {
-    try {
-      await AdMobInterstitial.setAdUnitID(adUnitId);
-      await AdMobInterstitial.requestAdAsync({
-        servePersonalizedAds: true
-      });
-      await AdMobInterstitial.showAdAsync();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handleWatchAdd = () => {
-    console.log('click');
-    showInterstitial();
-  };
+  // const showInterstitial = async () => {
+  //   try {
+  //     await AdMobInterstitial.setAdUnitID(adUnitId);
+  //     await AdMobInterstitial.requestAdAsync({
+  //       servePersonalizedAds: true
+  //     });
+  //     await AdMobInterstitial.showAdAsync();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  // const handleWatchAdd = () => {
+  //   showInterstitial();
+  // };
 
   return (
-    <Layout>
-      <ScrollView style={{ paddingHorizontal: 20 }}>
-        <Title size="large">About</Title>
+    <Layout scrollable>
+      <Title size="large">About</Title>
+      <Text>
+        The app's purpose is to provide younger generations within the Heavenly
+        Parent Holy Community a means to promote events and activities that are
+        meaningful to them. Created by blessed children for blessed children,
+        the creators of this app hope that users can develop a sense of
+        solidarity and unity in our common cause to support True Parent's
+        providence.
+      </Text>
+      <Title size="large" style={{ marginTop: 88, marginBottom: 32 }}>
+        Meet the team
+      </Title>
+      <View style={{ marginBottom: 0 }}>
+        {people.map((person) => (
+          <PersonCard
+            key={person.displayName}
+            {...person}
+            style={{ marginBottom: 24 }}
+          />
+        ))}
+        <Title style={{ marginBottom: 24, marginTop: 32 }}>
+          Special Thanks to you
+        </Title>
         <Text>
-          The app's purpose is to provide younger generations within the
-          Heavenly Parent Holy Community a means to promote events and
-          activities that are meaningful to them. Created by blessed children
-          for blessed children, the creators of this app hope that users can
-          develop a sense of solidarity and unity in our common cause to support
-          True Parent's providence.
+          For all the numerable others who volunteer and help YSP, you are the
+          reason YSP is amazing. Truly lots of credit goes to you, thank you!
         </Text>
-        <Title size="large" style={{ marginTop: 88, marginBottom: 32 }}>
-          Meet the team
-        </Title>
-        <View style={{ marginBottom: 0 }}>
-          {people.map((person) => (
-            <PersonCard
-              key={person.displayName}
-              {...person}
-              style={{ marginBottom: 24 }}
-            />
-          ))}
-          <Title style={{ marginBottom: 24, marginTop: 32 }}>
-            Special Thanks to you
-          </Title>
-          <Text>
-            For all the numerable others who volunteer and help YSP, you are the
-            reason YSP is amazing. Truly lots of credit goes to you, thank you!
-          </Text>
-        </View>
-        <Title size="large" style={{ marginTop: 88 }}>
-          Support YSP
-        </Title>
-        <ExternalLink
-          title={'Donate here'}
-          onPress={() =>
-            Linking.openURL('https://www.yspcanada.org/donate').catch((err) =>
-              console.log(err)
-            )
-          }
-          size="small"
-          style={{ marginBottom: 12 }}
-        />
-        {/* <ExternalLink
+      </View>
+      <Title size="large" style={{ marginTop: 88 }}>
+        Support YSP
+      </Title>
+      <ExternalLink
+        title={'Donate here'}
+        onPress={() =>
+          Linking.openURL('https://www.yspcanada.org/donate').catch((err) =>
+            console.log(err)
+          )
+        }
+        size="small"
+        style={{ marginBottom: 12 }}
+      />
+      {/* <ExternalLink
           title={'Watch an ad'}
           onPress={handleWatchAdd}
           size="small"
         /> */}
 
-        <Text style={{ textAlign: 'center', marginTop: 88 }}>
-          Contact us via
-        </Text>
+      <Text style={{ textAlign: 'center', marginTop: 88 }}>Contact us via</Text>
+      <Text
+        selectable={true}
+        style={{ textAlign: 'center', marginBottom: 32, color: colors.p1 }}
+      >
+        yspcanada@outlook.com
+      </Text>
+      <Text style={{ textAlign: 'center' }}>Or visit us on</Text>
+      <Pressable
+        onPress={() =>
+          Linking.openURL('https://www.yspcanada.org/').catch((err) =>
+            console.log(err)
+          )
+        }
+      >
         <Text
-          selectable={true}
-          style={{ textAlign: 'center', marginBottom: 32, color: colors.p1 }}
+          style={{
+            textAlign: 'center',
+            marginBottom: 32,
+            textDecorationLine: 'underline',
+            color: colors.p1
+          }}
         >
-          yspcanada@outlook.com
+          www.yspcanada.org
         </Text>
-        <Text style={{ textAlign: 'center' }}>Or visit us on</Text>
-        <Pressable
-          onPress={() =>
-            Linking.openURL('https://www.yspcanada.org/').catch((err) =>
-              console.log(err)
-            )
-          }
-        >
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 32,
-              textDecorationLine: 'underline',
-              color: colors.p1
-            }}
-          >
-            www.yspcanada.org
-          </Text>
-        </Pressable>
-        <Text style={{ textAlign: 'center', marginBottom: 12 }}>
-          Produced by: Francois L.
-        </Text>
-        <Text style={{ textAlign: 'center', marginBottom: 12 }}>
-          Designed by: Kimberly G.
-        </Text>
-        <Text style={{ textAlign: 'center', marginBottom: 100 }}>
-          Developed by: Teresa L.
-        </Text>
-      </ScrollView>
+      </Pressable>
+      <Text style={{ textAlign: 'center', marginBottom: 12 }}>
+        Produced by: Francois L.
+      </Text>
+      <Text style={{ textAlign: 'center', marginBottom: 12 }}>
+        Designed by: Kimberly G.
+      </Text>
+      <Text style={{ textAlign: 'center', marginBottom: 100 }}>
+        Developed by: Teresa L.
+      </Text>
     </Layout>
   );
 };

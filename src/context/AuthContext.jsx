@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [hasAuthState, setHasAuthState] = useState(false);
-  const [city, setCity] = useState(CITIES[0]);
+  const [selectedCity, setSelectedCity] = useState(CITIES[0]);
 
   useEffect(() => {
     fetchAuthStateChanged((user) => {
@@ -23,8 +23,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         currentUser,
         setCurrentUser,
-        city,
-        setCity,
+        selectedCity,
+        setSelectedCity,
         hasAuthState
       }}
     >

@@ -1,7 +1,9 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from 'react-native-paper';
+
 import { CalendarScreen, EventListScreen } from '../screens';
+import { EventProvider } from '../context';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -42,4 +44,8 @@ function TabNavigator() {
   );
 }
 
-export default TabNavigator;
+export default () => (
+  <EventProvider>
+    <TabNavigator />
+  </EventProvider>
+);

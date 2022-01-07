@@ -5,3 +5,5 @@ export * from './divider';
 export * from './error';
 export * from './layout';
 export * from './form';
+export * from './loading';
+export * from './hat-circles';

@@ -24,6 +24,11 @@ export const palette = {
   y1: '#FFB952'
 };
 
+export const padding = {
+  small: 12,
+  medium: 24
+};
+
 export const theme = {
   ...DefaultTheme,
   roundness: 2,

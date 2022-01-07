@@ -5,10 +5,9 @@ import {
   DrawerRouter,
   createNavigatorFactory
 } from '@react-navigation/native';
-import Drawer, { HEADER_HEIGHT } from './Drawer';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Drawer } from '../components';
 
-const DrawerNavigator = ({
+const MyNavigationContent = ({
   initialRouteName,
   children,
   screenOptions,
@@ -36,4 +35,4 @@ const DrawerNavigator = ({
   );
 };
 
-export const createMyNavigator = createNavigatorFactory(DrawerNavigator);
+export const createMyNavigator = createNavigatorFactory(MyNavigationContent);

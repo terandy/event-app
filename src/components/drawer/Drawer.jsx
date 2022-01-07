@@ -9,6 +9,7 @@ import { AuthContext } from '../../context';
 import { apiLogout } from '../../firebase-api';
 import { DRAWER_HEIGHT, HEADER_HEIGHT } from '../../data';
 import { IconButton, Button } from '../../elements';
+import { Header } from '../header';
 
 const Drawer = ({ navigation, descriptors, state }) => {
   const { colors } = useTheme();
@@ -20,7 +21,6 @@ const Drawer = ({ navigation, descriptors, state }) => {
     outputRange: [-DRAWER_HEIGHT, 0]
   };
   const handleLogout = () => {
-    console.log('logout');
     apiLogout()
       .then(() => setCurrentUser(null))
       .catch((err) => console.log(err));
@@ -74,9 +74,11 @@ const Drawer = ({ navigation, descriptors, state }) => {
     >
       {status === 'close' && (
         <SafeAreaView>
-          <View style={styles.header}>
-            <Button title="open" size="small" onPress={handleOpen} />
-          </View>
+          <Header
+            openDrawer={handleOpen}
+            state={state}
+            navigation={navigation}
+          />
         </SafeAreaView>
       )}
       {status !== 'close' && (

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
+
 import { TextInput, Button, Error } from '../../elements';
 import { apiRegister } from '../../firebase-api';
 
