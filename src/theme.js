@@ -26,7 +26,8 @@ export const palette = {
 
 export const padding = {
   small: 12,
-  medium: 24
+  medium: 24,
+  large: 32
 };
 
 export const theme = {

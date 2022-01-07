@@ -12,7 +12,27 @@ const MONTHS = [
   'Nov',
   'Dec'
 ];
-
+export const isSameDay = (someDate, otherDate, frequency) => {
+  if (frequency === '') {
+    return (
+      someDate.getDate() == otherDate.getDate() &&
+      someDate.getMonth() == otherDate.getMonth() &&
+      someDate.getFullYear() == otherDate.getFullYear()
+    );
+  }
+  if (frequency === 'WEEKLY') {
+    return someDate.getDay() === otherDate.getDay();
+  }
+  if (frequency === 'MONTHLY') {
+    return someDate.getDate() === otherDate.getDate();
+  }
+  if (frequency === 'YEARLY') {
+    return (
+      someDate.getDate() === otherDate.getDate() &&
+      someDate.getMonth() === otherDate.getMonth()
+    );
+  }
+};
 export const formatDate = (datetime) => {
   return `${
     MONTHS[datetime?.getMonth()]

@@ -5,21 +5,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { HEADER_HEIGHT } from '../../data';
 import { padding } from '../../theme';
 
-const Layout = ({ children, scrollable }) => {
+const Layout = ({ children, scrollable, style }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={stylesheet.container}>
       <View style={{ width: '100%', height: HEADER_HEIGHT }} />
       {scrollable ? (
-        <ScrollView style={style.padding}>{children}</ScrollView>
+        <ScrollView style={[stylesheet.padding, style]}>{children}</ScrollView>
       ) : (
-        <View style={style.padding}>{children}</View>
+        <View style={[stylesheet.padding, style]}>{children}</View>
       )}
     </SafeAreaView>
   );
 };
 
-const style = StyleSheet.create({
-  padding: { paddingHorizontal: padding.medium }
+const stylesheet = StyleSheet.create({
+  padding: { flex: 1, paddingHorizontal: padding.medium },
+  container: { flex: 1 }
 });
 
 export default Layout;

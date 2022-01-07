@@ -19,7 +19,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.1.6'
+      buildNumber: '1.1.7'
     },
     android: {
       adaptiveIcon: {
@@ -27,7 +27,7 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 16,
+      versionCode: 17,
       googleServicesFile: './google-services.json'
     },
     web: {

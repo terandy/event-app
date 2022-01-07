@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 
 import { EventContext, AuthContext } from '../../context';
-import { Title, Layout } from '../../elements';
+import { Title, Layout, Loading } from '../../elements';
 import { EventCard } from '../../components';
 
 function EventListScreen({ navigation }) {
   const { selectedCity } = useContext(AuthContext);
   const { events } = useContext(EventContext);
 
-  const upcomingEvents = events.filter(
+  const upcomingEvents = events?.filter(
     (event) =>
       event.cities.includes(selectedCity) &&
       (event.frequency !== '' ||
@@ -17,7 +17,9 @@ function EventListScreen({ navigation }) {
   const handleEventPress = (id) => {
     navigation.navigate('Event', { id });
   };
-
+  if (!events) {
+    return <Loading />;
+  }
   return (
     <Layout scrollable>
       <Title size="large">Upcoming Events</Title>

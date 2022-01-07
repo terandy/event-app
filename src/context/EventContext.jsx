@@ -1,10 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { fetchEvents } from '../firebase-api';
+import { isSame } from '../utils';
 
 export const EventContext = createContext();
 
 export const EventProvider = ({ children }) => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(null);
 
   useEffect(() => {
     const unsubscribe = fetchEvents(
