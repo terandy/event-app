@@ -8,15 +8,19 @@ export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = fetchEvents(
-      (snapshot) => {
-        if (snapshot.size) {
-          let events = snapshot.docs.map((doc) => doc.data());
-          setEvents(events);
-        }
-      },
-      (err) => console.log({ err })
-    );
+    let unsubscribe = () => {};
+    const callback = async () => {
+      unsubscribe = await fetchEvents(
+        (snapshot) => {
+          if (snapshot.size) {
+            let events = snapshot.docs.map((doc) => doc.data());
+            setEvents(events);
+          }
+        },
+        (err) => console.log({ err })
+      );
+    };
+    callback();
     return () => unsubscribe();
   }, []);
 

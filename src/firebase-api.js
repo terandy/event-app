@@ -32,3 +32,24 @@ export const fetchEvents = async (callback, errorCallback) =>
     .collection('events')
     .orderBy('dateTime', 'asc')
     .onSnapshot(callback, errorCallback);
+
+export const fetchUser = ({ uid }, callback, errorCallback) =>
+  db.collection('users').doc(uid).onSnapshot(callback, errorCallback);
+
+export const fetchEvent = async ({ id }, callback, errorCallback) =>
+  db.collection('events').doc(id).onSnapshot(callback, errorCallback);
+
+export const fetchOrganiser = async ({ creator }, callback, errorCallback) =>
+  db.collection('users').doc(creator).onSnapshot(callback, errorCallback);
+
+export const apiSetMessages = async ({ id, newComment, messages }) => {
+  return db
+    .collection('events')
+    .doc(id)
+    .update(
+      {
+        messages: messages ? messages.concat(newComment) : [newComment]
+      },
+      { merge: true }
+    );
+};

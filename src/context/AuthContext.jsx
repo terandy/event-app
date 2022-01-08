@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { CITIES } from '../data';
-import { fetchAuthStateChanged } from '../firebase-api';
+import { fetchAuthStateChanged, fetchUser } from '../firebase-api';
 
 export const AuthContext = createContext();
 
@@ -10,12 +10,22 @@ export const AuthProvider = ({ children }) => {
   const [selectedCity, setSelectedCity] = useState(CITIES[0]);
 
   useEffect(() => {
-    fetchAuthStateChanged((user) => {
+    let unsubscribe = () => {};
+    fetchAuthStateChanged(async (user) => {
       setHasAuthState(true);
       if (user) {
-        setCurrentUser(user);
+        unsubscribe = await fetchUser(
+          { uid: user.uid },
+          (doc) => {
+            if (doc.data()) {
+              setCurrentUser(doc.data());
+            }
+          },
+          (err) => console.log(err)
+        );
       }
     });
+    return () => unsubscribe();
   }, []);
 
   return (
