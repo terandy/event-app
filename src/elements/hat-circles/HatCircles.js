@@ -19,25 +19,36 @@ const Circle = ({ color, style, show }) => {
     />
   );
 };
-const HatCircles = ({ hats }) => {
+const HatCircles = ({ hats, alternate = false }) => {
   const { colors } = useTheme();
   return (
     <View>
-      <View style={{ flexDirection: 'row', marginBottom: 2 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginBottom: 2
+        }}
+      >
         <Circle
-          color={colors[HAT_COLORS[0]]}
+          color={alternate ? colors.p2 : colors[HAT_COLORS[HATS[0]]]}
           show={hats.includes(HATS[0])}
           style={{ marginRight: 2 }}
         />
-        <Circle color={colors[HAT_COLORS[1]]} show={hats.includes(HATS[1])} />
+        <Circle
+          color={colors[HAT_COLORS[HATS[1]]]}
+          show={hats.includes(HATS[1])}
+        />
       </View>
       <View style={{ flexDirection: 'row', marginBottom: 2 }}>
         <Circle
-          color={colors[HAT_COLORS[2]]}
+          color={colors[HAT_COLORS[HATS[2]]]}
           show={hats.includes(HATS[2])}
           style={{ marginRight: 2 }}
         />
-        <Circle color={colors[HAT_COLORS[3]]} show={hats.includes(HATS[3])} />
+        <Circle
+          color={colors[HAT_COLORS[HATS[3]]]}
+          show={hats.includes(HATS[3])}
+        />
       </View>
     </View>
   );

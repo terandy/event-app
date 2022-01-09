@@ -3,7 +3,7 @@ import { View, Text, Linking } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import { ExternalLink, PillButton } from '../../elements';
-import { HATS } from '../../data';
+import { HATS, HAT_COLORS } from '../../data';
 import { fetchOrganiser } from '../../firebase-api';
 
 const Details = ({ event }) => {
@@ -38,18 +38,16 @@ const Details = ({ event }) => {
         </Text>
       )}
       <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-        {HATS.map((hat) => {
-          if (event.hats?.includes(hat.name)) {
-            return (
-              <PillButton
-                key={hat.name}
-                title={hat.name}
-                color={colors[hat.color]}
-                style={{ marginRight: 12 }}
-                isActive={true}
-              />
-            );
-          }
+        {event.hats.map((hat) => {
+          return (
+            <PillButton
+              key={hat}
+              title={hat}
+              color={colors[HAT_COLORS[hat]]}
+              style={{ marginRight: 12 }}
+              disable={true}
+            />
+          );
         })}
       </View>
       {event.location && (

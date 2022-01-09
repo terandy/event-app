@@ -1,7 +1,25 @@
 import React from 'react';
-import { TouchableOpacity, Text, Platform } from 'react-native';
+import { TouchableOpacity, Text, Platform, View } from 'react-native';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
+
+const Content = ({ icon, title }) => {
+  return (
+    <>
+      {icon && <Icons name={icon} color={colors.w1} size={16} />}
+      <Text
+        style={{
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: Platform.OS === 'ios' ? 18 : 14,
+          marginHorizontal: 8
+        }}
+      >
+        {title}
+      </Text>
+    </>
+  );
+};
 
 const PillButton = ({
   isActive = true,
@@ -9,36 +27,42 @@ const PillButton = ({
   onPress,
   color,
   style,
-  icon
+  icon,
+  disable = false
 }) => {
   const { colors } = useTheme();
-  return (
-    <TouchableOpacity
-      onPress={onPress}
+  return disable ? (
+    <View
       style={[
         {
-          backgroundColor: color || colors.p1,
-          opacity: isActive ? 1 : 0.25,
+          backgroundColor: isActive ? color || colors.p1 : colors.p3,
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
           borderRadius: 7,
-          padding: 8
+          padding: Platform.OS === 'ios' ? 8 : 6
         },
         style
       ]}
     >
-      {icon && <Icons name={icon} color={colors.w1} size={16} />}
-      <Text
-        style={{
-          color: 'white',
-          fontWeight: 'bold',
-          fontSize: Platform.OS === 'ios' ? 18 : 14,
-          marginHorizontal: 4
-        }}
-      >
-        {title}
-      </Text>
+      <Content title={title} icon={icon} />
+    </View>
+  ) : (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        {
+          backgroundColor: isActive ? color || colors.p1 : colors.p3,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'row',
+          borderRadius: 7,
+          padding: Platform.OS === 'ios' ? 8 : 6
+        },
+        style
+      ]}
+    >
+      <Content title={title} icon={icon} />
     </TouchableOpacity>
   );
 };

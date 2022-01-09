@@ -1,5 +1,6 @@
 import { auth, db } from '../firebase';
 import { DEFAULT_USER_SETTINGS } from './data';
+import * as firebase from 'firebase';
 
 export const fetchAuthStateChanged = (callback) => {
   try {
@@ -53,3 +54,67 @@ export const apiSetMessages = async ({ id, newComment, messages }) => {
       { merge: true }
     );
 };
+
+export const apiDeleteEvent = async ({ id }) =>
+  db.collection('events').doc(id).delete();
+
+export const apiUpdateEvent = async ({ id, data }) =>
+  db.collection('events').doc(id).set(data, { merge: true });
+
+const savePostData = (downloadURL, eventId, callback) => {
+  db.collection('events')
+    .doc(eventId)
+    .set(
+      {
+        imageUrl: downloadURL,
+        creation: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    )
+    .then(() => {
+      callback();
+    });
+};
+
+export const apiUploadImage = async ({ eventId, image, callback }) => {
+  const response = await fetch(image);
+  const blob = await response.blob();
+
+  const task = firebase.storage().ref().child(`events/${eventId}`).put(blob);
+  const taskProgress = () => {
+    console.log(`transferred:${task.snapshot.bytesTransferred}`);
+  };
+  const taskCompleted = () => {
+    task.snapshot.ref.getDownloadURL().then((snapshot) => {
+      savePostData(snapshot, eventId, callback);
+    });
+  };
+  const taskError = () => {
+    console.log(task.snapshot.error);
+  };
+  task.on('state_changed', taskProgress, taskError, taskCompleted);
+};
+
+export const apiCreateEvent = async ({
+  data,
+  image,
+  callback,
+  errorCallback
+}) =>
+  db
+    .collection('events')
+    .add(data)
+    .then((res) => {
+      // add id to doc
+      firebase
+        .firestore()
+        .collection('events')
+        .doc(res.id)
+        .set({ id: res.id }, { merge: true });
+      if (image) {
+        uploadImage({ id: res.id, image, callback });
+      } else {
+        callback(res);
+      }
+    })
+    .catch((err) => errorCallback(err));

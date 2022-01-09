@@ -14,6 +14,12 @@ export const HAT_COLORS = {
   WFWP: 't1',
   FFWPU: 'y1'
 };
+export const FREQUENCY_OPTIONS = [
+  { value: 'DAILY', label: 'daily' },
+  { value: 'WEEKLY', label: 'weekly' },
+  { value: 'MONTHLY', label: 'monthly' },
+  { value: 'YEARLY', label: 'yearly' }
+];
 
 export const DEFAULT_USER_SETTINGS = {
   cities: CITIES,

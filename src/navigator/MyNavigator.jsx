@@ -1,4 +1,11 @@
-import { SettingsScreen, InfoScreen, EventScreen } from '../screens';
+import {
+  SettingsScreen,
+  InfoScreen,
+  EventScreen,
+  EditEventScreen,
+  DeleteEventScreen,
+  CreateEventScreen
+} from '../screens';
 import TabNavigator from './TabNavigator';
 import { createMyNavigator } from './createMyNavigator';
 
@@ -26,6 +33,21 @@ function MyNavigator() {
         name="Event"
         component={EventScreen}
         options={{ title: 'Event', hide: true }}
+      />
+      <My.Screen
+        name="Edit Event"
+        component={EditEventScreen}
+        options={{ title: 'Edit Event', hide: true }}
+      />
+      <My.Screen
+        name="Delete Event"
+        component={DeleteEventScreen}
+        options={{ title: 'Delete Event', hide: true }}
+      />
+      <My.Screen
+        name="Create Event"
+        component={CreateEventScreen}
+        options={{ title: 'Create Event' }}
       />
     </My.Navigator>
   );

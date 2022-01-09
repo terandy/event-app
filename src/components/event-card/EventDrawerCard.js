@@ -19,7 +19,7 @@ const EventDrawerCard = ({ event, onPress }) => {
         }}
       >
         <Title color="white">{event.title}</Title>
-        <HatCircles hats={event.hats} />
+        <HatCircles hats={event.hats} alternate />
       </View>
       <Title size="small" style={{ color: 'white', fontWeight: 'normal' }}>
         {event.description}

@@ -12,6 +12,7 @@ const TextInputStyled = ({
   leftIcon,
   rightIcon,
   handlePasswordVisibility,
+  numberOfLines,
   ...rest
 }) => {
   const { colors } = useTheme();
@@ -29,7 +30,8 @@ const TextInputStyled = ({
         {...rest}
         placeholder={placeholder}
         onChangeText={onChangeText}
-        style={{ flex: 1, width: '100%' }}
+        numberOfLines={numberOfLines}
+        style={[{ width: '100%', textAlignVertical: 'top' }]}
       />
       {rightIcon && (
         <TouchableOpacity onPress={handlePasswordVisibility}>
@@ -48,8 +50,7 @@ const TextInputStyled = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: 13,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    padding: 12,
     flexDirection: 'row',
     alignItems: 'center'
   }
