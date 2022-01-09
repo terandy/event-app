@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [hasAuthState, setHasAuthState] = useState(false);
   const [selectedCity, setSelectedCity] = useState(CITIES[0]);
+  const [drawerStatus, setDrawerStatus] = useState('close');
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -35,7 +36,9 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser,
         selectedCity,
         setSelectedCity,
-        hasAuthState
+        hasAuthState,
+        drawerStatus,
+        setDrawerStatus
       }}
     >
       {children}

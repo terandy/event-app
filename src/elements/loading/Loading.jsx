@@ -1,15 +1,18 @@
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Layout } from '../layout';
 
-const Loading = ({ color }) => {
+const Loading = () => {
   return (
-    <View style={[styles.page, { backgroundColor: color }]}>
-      <ActivityIndicator
-        animating={true}
-        size="large"
-        style={{ opacity: 1 }}
-        color="#999999"
-      />
-    </View>
+    <Layout style={{ padding: 0 }}>
+      <View style={[styles.page]}>
+        <ActivityIndicator
+          animating={true}
+          size="large"
+          style={{ opacity: 1 }}
+          color="#999999"
+        />
+      </View>
+    </Layout>
   );
 };
 

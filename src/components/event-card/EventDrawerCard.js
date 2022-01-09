@@ -15,7 +15,7 @@ const EventDrawerCard = ({ event, onPress }) => {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          marginBottom: padding.small
+          marginBottom: padding.xsmall
         }}
       >
         <Title color="white">{event.title}</Title>

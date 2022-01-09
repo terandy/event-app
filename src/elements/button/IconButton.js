@@ -1,8 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
-
-const iconSize = { small: 26, medium: 32 };
+import { ICON_SIZE } from '../../data';
 
 const IconButton = ({ onPress, icon, color, title, style, size = 'small' }) => {
   return (
@@ -17,7 +16,7 @@ const IconButton = ({ onPress, icon, color, title, style, size = 'small' }) => {
         style
       ]}
     >
-      <Icons name={icon} color={color} size={iconSize[size]} />
+      <Icons name={icon} color={color} size={ICON_SIZE[size]} />
       {title && (
         <Text style={{ color, marginLeft: 6, fontWeight: 'bold' }}>
           {title}

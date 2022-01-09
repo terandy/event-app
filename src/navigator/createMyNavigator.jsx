@@ -5,6 +5,7 @@ import {
   DrawerRouter,
   createNavigatorFactory
 } from '@react-navigation/native';
+
 import { Drawer } from '../components';
 
 const MyNavigationContent = ({

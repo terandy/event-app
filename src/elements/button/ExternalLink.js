@@ -3,6 +3,7 @@ import { TouchableOpacity, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 
+// TODO: check ios vs android and move to data folder
 const sizes = {
   medium: { height: 24, fontSize: 18, padding: 12 },
   small: { height: 18, fontSize: 16, padding: 8 },

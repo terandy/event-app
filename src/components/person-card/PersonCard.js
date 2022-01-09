@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import { Title, Line } from '../../elements';
+import { padding } from '../../theme';
 
 const PersonCard = ({ displayName, title, description, image, style }) => {
   const { colors } = useTheme();
@@ -24,7 +25,7 @@ const PersonCard = ({ displayName, title, description, image, style }) => {
               width: 92,
               height: 92,
               borderRadius: 92 / 2,
-              marginRight: 16
+              marginRight: padding.small
             }}
             source={{ uri: image }}
           />
@@ -34,7 +35,7 @@ const PersonCard = ({ displayName, title, description, image, style }) => {
               width: 92,
               height: 92,
               borderRadius: 92 / 2,
-              marginRight: 16,
+              marginRight: padding.small,
               backgroundColor: colors.g2
             }}
           />

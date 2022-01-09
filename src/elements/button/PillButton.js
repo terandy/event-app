@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, Platform } from 'react-native';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
 
@@ -33,7 +33,7 @@ const PillButton = ({
         style={{
           color: 'white',
           fontWeight: 'bold',
-          fontSize: 14,
+          fontSize: Platform.OS === 'ios' ? 18 : 14,
           marginHorizontal: 4
         }}
       >

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'react-native-paper';
+import { padding } from '../../theme';
 
 const Error = ({ message, style, positive, ...props }) => {
   const { colors } = useTheme();
@@ -17,7 +18,7 @@ const Error = ({ message, style, positive, ...props }) => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: 16
+          padding: padding.small
         },
         style
       ]}

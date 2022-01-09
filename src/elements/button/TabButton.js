@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 const TabButton = ({
@@ -19,14 +19,22 @@ const TabButton = ({
           backgroundColor: isActive ? color || colors.p1 : colors.p3,
           alignItems: 'center',
           justifyContent: 'center',
-          width: 46,
-          height: 32,
           borderRadius: 7
         },
         style
       ]}
     >
-      <Text style={{ color: 'white', fontWeight: 'bold' }}>{title}</Text>
+      <Text
+        style={{
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: Platform.OS === 'ios' ? 16 : 14,
+          marginHorizontal: 8,
+          marginVertical: Platform.OS === 'ios' ? 8 : 6
+        }}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

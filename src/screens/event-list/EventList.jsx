@@ -1,4 +1,6 @@
 import { useContext } from 'react';
+import { ScrollView, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 import { EventContext, AuthContext } from '../../context';
 import { Title, Layout, Loading } from '../../elements';
@@ -7,6 +9,7 @@ import { EventCard } from '../../components';
 function EventListScreen({ navigation }) {
   const { selectedCity } = useContext(AuthContext);
   const { events } = useContext(EventContext);
+  const { colors } = useTheme();
 
   const upcomingEvents = events?.filter(
     (event) =>
@@ -21,16 +24,31 @@ function EventListScreen({ navigation }) {
     return <Loading />;
   }
   return (
-    <Layout scrollable>
-      <Title size="large">Upcoming Events</Title>
-      {upcomingEvents.map((event) => (
-        <EventCard
-          key={event.id}
-          event={event}
-          style={{ marginVertical: 8 }}
-          onPress={() => handleEventPress(event.id)}
-        />
-      ))}
+    <Layout style={{ paddingHorizontal: 0 }}>
+      <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+        <Title size="large">Upcoming Events</Title>
+        {upcomingEvents.map((event) => (
+          <EventCard
+            key={event.id}
+            event={event}
+            style={{ marginVertical: 8 }}
+            onPress={() => handleEventPress(event.id)}
+          />
+        ))}
+        {upcomingEvents.length === 0 && (
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Title color={colors.p1} size="small">
+              No events to show
+            </Title>
+          </View>
+        )}
+      </ScrollView>
     </Layout>
   );
 }

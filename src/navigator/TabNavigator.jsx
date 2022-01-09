@@ -4,6 +4,7 @@ import { useTheme } from 'react-native-paper';
 
 import { CalendarScreen, EventListScreen } from '../screens';
 import { EventProvider } from '../context';
+import { ICON_SIZE } from '../data';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,7 +19,11 @@ function TabNavigator() {
         tabBarActiveTintColor: colors.p1,
         tabBarInactiveTintColor: colors.g2,
         tabBarIndicatorStyle: { height: 0 },
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
+        tabBarIconStyle: {
+          height: ICON_SIZE.medium,
+          width: ICON_SIZE.medium
+        }
       }}
       sceneContainerStyle={{ backgroundColor: colors.w1 }}
     >
@@ -27,7 +32,11 @@ function TabNavigator() {
         component={EventListScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons
+              name="home"
+              color={color}
+              size={ICON_SIZE.small}
+            />
           )
         }}
       />
@@ -36,7 +45,11 @@ function TabNavigator() {
         component={CalendarScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="calendar" color={color} size={26} />
+            <MaterialCommunityIcons
+              name="calendar"
+              color={color}
+              size={ICON_SIZE.small}
+            />
           )
         }}
       />

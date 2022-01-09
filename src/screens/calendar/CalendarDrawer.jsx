@@ -29,7 +29,7 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
 const style = StyleSheet.create({
   container: {
     paddingTop: 0,
-    paddingBottom: padding.small,
+    paddingBottom: padding.xsmall,
     borderTopEndRadius: padding.medium,
     borderTopStartRadius: padding.medium,
     position: 'absolute',

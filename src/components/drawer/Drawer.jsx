@@ -10,11 +10,12 @@ import { apiLogout } from '../../firebase-api';
 import { DRAWER_HEIGHT, HEADER_HEIGHT } from '../../data';
 import { IconButton, Button } from '../../elements';
 import { Header } from '../header';
+import { padding } from '../../theme';
 
 const Drawer = ({ navigation, descriptors, state }) => {
   const { colors } = useTheme();
-  const { setCurrentUser } = useContext(AuthContext);
-  const [status, setStatus] = useState('close');
+  const { setCurrentUser, drawerStatus, setDrawerStatus } =
+    useContext(AuthContext);
   const anim = useRef(new Animated.Value(0)).current;
   const animOptions = {
     inputRange: [0, 1],
@@ -27,23 +28,23 @@ const Drawer = ({ navigation, descriptors, state }) => {
   };
 
   const handleOpen = () => {
-    setStatus('transition');
+    setDrawerStatus('transition');
     Animated.timing(anim, {
       toValue: 1,
       duration: 250,
       useNativeDriver: true
     }).start(() => {
-      setStatus('open');
+      setDrawerStatus('open');
     });
   };
   const handleClose = () => {
-    setStatus('transition');
+    setDrawerStatus('transition');
     Animated.timing(anim, {
       toValue: 0,
       duration: 250,
       useNativeDriver: true
     }).start(() => {
-      setStatus('close');
+      setDrawerStatus('close');
     });
   };
 
@@ -69,10 +70,10 @@ const Drawer = ({ navigation, descriptors, state }) => {
         top: 0,
         right: 0,
         left: 0,
-        ...(status !== 'close' && { height: '100%' })
+        ...(drawerStatus !== 'close' && { height: '100%' })
       }}
     >
-      {status === 'close' && (
+      {drawerStatus === 'close' && (
         <SafeAreaView>
           <Header
             openDrawer={handleOpen}
@@ -81,7 +82,7 @@ const Drawer = ({ navigation, descriptors, state }) => {
           />
         </SafeAreaView>
       )}
-      {status !== 'close' && (
+      {drawerStatus !== 'close' && (
         <BlurView intensity={120} tint="dark" style={{ flex: 1 }}>
           <Animated.View
             style={[
@@ -142,12 +143,15 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
     borderBottomEndRadius: 69,
     borderBottomStartRadius: 69,
-    padding: 32,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 32 : 50,
+    padding: padding.large,
+    paddingTop:
+      Platform.OS === 'android'
+        ? StatusBar.currentHeight + padding.medium
+        : padding.medium,
     display: 'flex',
     alignItems: 'center'
   },
-  gap: { marginBottom: 16, width: '100%' },
+  gap: { marginBottom: padding.small, width: '100%' },
   header: {
     height: HEADER_HEIGHT,
     alignItems: 'center',
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   close: {
-    marginBottom: 32,
+    marginVertical: padding.medium,
     justifyContent: 'flex-end',
     width: '100%',
     flexDirection: 'row'
