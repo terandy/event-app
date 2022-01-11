@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
@@ -33,7 +33,7 @@ const DeleteEvent = ({ navigation, route }) => {
       >
         <View style={{ paddingHorizontal: padding.medium, flex: 1 }}>
           <Title size="large">Delete Event</Title>
-          <Title size="medium">
+          <Title size="medium" style={{ marginBottom: padding.medium }}>
             Are you sure you want to delete the event?
           </Title>
           <Button

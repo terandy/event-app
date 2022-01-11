@@ -38,7 +38,7 @@ const Details = ({ event }) => {
         </Text>
       )}
       <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-        {event.hats.map((hat) => {
+        {event.hats?.map((hat) => {
           return (
             <PillButton
               key={hat}

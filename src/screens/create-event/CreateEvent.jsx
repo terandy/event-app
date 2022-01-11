@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   ScrollView,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   View,
@@ -19,15 +18,18 @@ import {
   PillButton,
   TabButton,
   SelectInput,
-  IconButton
+  IconButton,
+  DateTimeInput
 } from '../../elements';
-import { apiCreateEvent, apiUploadImage } from '../../firebase-api';
+import { apiCreateEvent } from '../../firebase-api';
 import { padding } from '../../theme';
 import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from '../../data';
+import { AuthContext } from '../../context';
 
-const CreateEvent = ({ navigation, route }) => {
+const CreateEvent = ({ navigation }) => {
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
   const [date, setDate] = useState(new Date(Date.now()));
   const [description, setDescription] = useState();
@@ -37,10 +39,10 @@ const CreateEvent = ({ navigation, route }) => {
   const [zoomLink, setZoomLink] = useState();
   const [time, setTime] = useState(new Date(Date.now()));
   const [cities, setCities] = useState([CITIES[0]]);
-  const [hats, setHats] = useState(['YSP']);
+  const [hats, setHats] = useState([HATS[0]]);
   const [isRecurring, setIsRecurring] = useState(false);
   const [frequency, setFrequency] = useState('');
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -70,7 +72,7 @@ const CreateEvent = ({ navigation, route }) => {
     }
   };
 
-  const saveEvent = () => {
+  const saveEvent = async () => {
     const data = {
       description,
       title,
@@ -80,6 +82,7 @@ const CreateEvent = ({ navigation, route }) => {
       cities,
       hats,
       frequency,
+      creator: currentUser.id,
       isRecurring,
       dateTime: new Date(
         date.getFullYear(),
@@ -94,12 +97,8 @@ const CreateEvent = ({ navigation, route }) => {
     apiCreateEvent({
       data,
       image,
-      callback: (res) => {
-        navigation.navigate('Event', { id: res.id });
+      callback: () => {
         setIsLoading(false);
-      },
-      errorCallback: (err) => {
-        console.log(err);
         navigation.navigate('Home');
       }
     });
@@ -146,12 +145,12 @@ const CreateEvent = ({ navigation, route }) => {
               >
                 Date
               </Title>
-              {/* <DateTimeInput
-                  setValue={setDate}
-                  value={date}
-                  mode="date"
-                  style={{ flex: 1 }}
-                /> */}
+              <DateTimeInput
+                setValue={setDate}
+                value={date}
+                mode="date"
+                style={{ flex: 1 }}
+              />
             </View>
             <View
               style={{
@@ -167,12 +166,12 @@ const CreateEvent = ({ navigation, route }) => {
               >
                 Time
               </Title>
-              {/* <DateTimeInput
-                  setValue={setTime}
-                  value={time}
-                  mode="time"
-                  style={{ flex: 1 }}
-                /> */}
+              <DateTimeInput
+                setValue={setTime}
+                value={time}
+                mode="time"
+                style={{ flex: 1 }}
+              />
             </View>
             <Title
               style={{

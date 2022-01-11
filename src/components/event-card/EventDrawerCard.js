@@ -1,8 +1,12 @@
 import { Pressable, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { Title, HatCircles } from '../../elements';
 import { padding } from '../../theme';
+import { formatTime } from '../../utils';
 
 const EventDrawerCard = ({ event, onPress }) => {
+  const time = formatTime(event.dateTime.toDate());
+  const { colors } = useTheme();
   return (
     <Pressable
       style={{
@@ -19,7 +23,9 @@ const EventDrawerCard = ({ event, onPress }) => {
         }}
       >
         <Title color="white">{event.title}</Title>
-        <HatCircles hats={event.hats} alternate />
+        <Title size="small" color={colors.w1}>
+          {time}
+        </Title>
       </View>
       <Title size="small" style={{ color: 'white', fontWeight: 'normal' }}>
         {event.description}

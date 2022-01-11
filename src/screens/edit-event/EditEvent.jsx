@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   View,
@@ -19,9 +18,15 @@ import {
   PillButton,
   TabButton,
   SelectInput,
-  IconButton
+  IconButton,
+  DateTimeInput
 } from '../../elements';
-import { apiUploadImage, apiUpdateEvent, fetchEvent } from '../../firebase-api';
+import {
+  apiUploadImage,
+  apiUpdateEvent,
+  fetchEvent,
+  apiDeleteImage
+} from '../../firebase-api';
 import { padding } from '../../theme';
 import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from '../../data';
 
@@ -98,6 +103,10 @@ const CreateEvent = ({ navigation, route }) => {
     setIsLoading(true);
     await apiUpdateEvent({ id: event.id, data });
     if (image && hasImageChanged) {
+      if (event.image)
+        apiDeleteImage({ imageUrl: event.image }).catch((err) =>
+          console.log(err)
+        );
       apiUploadImage({
         eventId: event.id,
         image,
@@ -195,12 +204,12 @@ const CreateEvent = ({ navigation, route }) => {
               >
                 Date
               </Title>
-              {/* <DateTimeInput
-                  setValue={setDate}
-                  value={date}
-                  mode="date"
-                  style={{ flex: 1 }}
-                /> */}
+              <DateTimeInput
+                setValue={setDate}
+                value={date}
+                mode="date"
+                style={{ flex: 1 }}
+              />
             </View>
             <View
               style={{
@@ -216,12 +225,12 @@ const CreateEvent = ({ navigation, route }) => {
               >
                 Time
               </Title>
-              {/* <DateTimeInput
-                  setValue={setTime}
-                  value={time}
-                  mode="time"
-                  style={{ flex: 1 }}
-                /> */}
+              <DateTimeInput
+                setValue={setTime}
+                value={time}
+                mode="time"
+                style={{ flex: 1 }}
+              />
             </View>
             <Title
               style={{

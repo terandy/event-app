@@ -4,7 +4,6 @@ import { useTheme } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 
 import { HAT_COLORS } from '../../data';
-import { padding } from '../../theme';
 import { EventContext, AuthContext } from '../../context';
 import { Layout, Loading } from '../../elements';
 import { formatCalendarDate, isSameDay } from '../../utils';
@@ -16,11 +15,13 @@ function CalendarScreen({ navigation }) {
   const { events } = useContext(EventContext);
   const initialDate = new Date(Date.now());
   const [selectedDate, setSelectedDate] = useState({
+    day: initialDate.getDate(),
     month: initialDate.getMonth() + 1,
     year: initialDate.getFullYear(),
     dateString: formatCalendarDate(initialDate)
   });
   const [markedDates, setMarkedDates] = useState({});
+  const [height, setHeight] = useState(400);
 
   let filteredEvents = [];
   let dailyEvents = [];
@@ -31,15 +32,22 @@ function CalendarScreen({ navigation }) {
     );
 
     if (filteredEvents.length > 0) {
-      dailyEvents = filteredEvents.filter((event) => {
-        const date = new Date(
-          selectedDate.year,
-          selectedDate.month - 1,
-          selectedDate.day
-        );
-        const eventDate = new Date(event.dateTime.toDate());
-        return isSameDay(date, eventDate, event.frequency);
-      });
+      dailyEvents = filteredEvents
+        .filter((event) => {
+          const date = new Date(
+            selectedDate.year,
+            selectedDate.month - 1,
+            selectedDate.day
+          );
+          const eventDate = new Date(event.dateTime.toDate());
+          return isSameDay(date, eventDate, event.frequency);
+        })
+        .sort(function (a, b) {
+          return a.dateTime
+            .toDate()
+            .toTimeString()
+            .localeCompare(b.dateTime.toDate().toTimeString());
+        });
     }
   }
 
@@ -104,23 +112,23 @@ function CalendarScreen({ navigation }) {
 
   return (
     <Layout style={style.layout}>
-      <View style={style.container}>
-        <View style={style.calendar}>
-          <Calendar
-            current={initialDate.toDateString()}
-            onMonthChange={handleDayPress}
-            onDayPress={handleDayPress}
-            markingType={'multi-dot'}
-            markedDates={addSelectedDateToMarkedDates(
-              markedDates,
-              selectedDate
-            )}
-          />
-        </View>
+      <View
+        style={style.container}
+        onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
+      >
+        <Calendar
+          current={initialDate.toDateString()}
+          onMonthChange={handleDayPress}
+          onDayPress={handleDayPress}
+          markingType={'multi-dot'}
+          markedDates={addSelectedDateToMarkedDates(markedDates, selectedDate)}
+          style={[style.calendar]}
+        />
         <CalendarDrawer
           dailyEvents={dailyEvents}
           selectedDate={selectedDate.dateString}
           handleEventPress={handleEventPress}
+          maxHeight={height}
         />
       </View>
     </Layout>
@@ -134,8 +142,7 @@ const style = StyleSheet.create({
     flex: 1
   },
   calendar: {
-    marginTop: padding.medium,
-    marginHorizontal: padding.medium
+    margin: 20
   }
 });
 

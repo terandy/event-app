@@ -36,8 +36,8 @@ const Event = ({ navigation, route }) => {
               setIsLoading(false);
             }
           },
-          (error) => {
-            console.log('Error getting document:', error);
+          (err) => {
+            console.log(err);
             setIsLoading(false);
           }
         );

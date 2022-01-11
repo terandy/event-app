@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-export const DRAWER_HEIGHT = 600;
+export const DRAWER_HEIGHT = 1000;
 export const HEADER_HEIGHT = Platform.OS === 'ios' ? 64 : 48;
 
 export const ICON_SIZE =

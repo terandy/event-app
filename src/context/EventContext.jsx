@@ -17,7 +17,7 @@ export const EventProvider = ({ children }) => {
             setEvents(events);
           }
         },
-        (err) => console.log({ err })
+        (err) => console.log(err)
       );
     };
     callback();

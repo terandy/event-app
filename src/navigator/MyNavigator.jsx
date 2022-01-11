@@ -17,7 +17,7 @@ function MyNavigator() {
       <My.Screen
         name="Home"
         component={TabNavigator}
-        options={{ title: 'Home' }}
+        options={{ title: 'Home', hide: true }}
       />
       <My.Screen
         name="Settings"

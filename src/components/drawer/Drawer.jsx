@@ -7,23 +7,27 @@ import { useTheme } from 'react-native-paper';
 
 import { AuthContext } from '../../context';
 import { apiLogout } from '../../firebase-api';
-import { DRAWER_HEIGHT, HEADER_HEIGHT } from '../../data';
+import { HEADER_HEIGHT } from '../../data';
 import { IconButton, Button } from '../../elements';
 import { Header } from '../header';
 import { padding } from '../../theme';
 
 const Drawer = ({ navigation, descriptors, state }) => {
   const { colors } = useTheme();
-  const { setCurrentUser, drawerStatus, setDrawerStatus } =
+  const { setCurrentUser, drawerStatus, setDrawerStatus, setLoggedIn } =
     useContext(AuthContext);
+  const [height, setHeight] = useState(600);
   const anim = useRef(new Animated.Value(0)).current;
   const animOptions = {
     inputRange: [0, 1],
-    outputRange: [-DRAWER_HEIGHT, 0]
+    outputRange: [-height, 0]
   };
   const handleLogout = () => {
     apiLogout()
-      .then(() => setCurrentUser(null))
+      .then(() => {
+        setCurrentUser(null);
+        setLoggedIn(false);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -85,10 +89,10 @@ const Drawer = ({ navigation, descriptors, state }) => {
       {drawerStatus !== 'close' && (
         <BlurView intensity={120} tint="dark" style={{ flex: 1 }}>
           <Animated.View
+            onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
             style={[
               styles.drawer,
               {
-                height: DRAWER_HEIGHT,
                 backgroundColor: colors.p1,
                 transform: [
                   {
@@ -139,19 +143,18 @@ const Drawer = ({ navigation, descriptors, state }) => {
 
 const styles = StyleSheet.create({
   drawer: {
-    height: DRAWER_HEIGHT,
     maxHeight: '100%',
     borderBottomEndRadius: 69,
     borderBottomStartRadius: 69,
     padding: padding.large,
     paddingTop:
       Platform.OS === 'android'
-        ? StatusBar.currentHeight + padding.medium
-        : padding.medium,
+        ? StatusBar.currentHeight + padding.small
+        : padding.small,
     display: 'flex',
     alignItems: 'center'
   },
-  gap: { marginBottom: padding.small, width: '100%' },
+  gap: { marginBottom: padding.xsmall, width: '100%' },
   header: {
     height: HEADER_HEIGHT,
     alignItems: 'center',
@@ -159,7 +162,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   close: {
-    marginVertical: padding.medium,
+    marginBottom: padding.small,
+    marginTop: Platform.OS === 'ios' ? padding.large : 0,
     justifyContent: 'flex-end',
     width: '100%',
     flexDirection: 'row'

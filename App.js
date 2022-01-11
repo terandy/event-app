@@ -13,26 +13,27 @@ LogBox.ignoreLogs([
 LogBox.ignoreLogs(['Setting a timer']);
 
 function App() {
-  const { hasAuthState, currentUser } = useContext(AuthContext);
+  const { hasAuthState, isLoggedIn } = useContext(AuthContext);
   const { colors } = useTheme();
-  const isLoggedIn = !!currentUser;
 
   if (!hasAuthState) {
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.p1
-      }}
-    >
-      <ActivityIndicator
-        animating={true}
-        size="large"
-        style={{ opacity: 1 }}
-        color={colors.p1}
-      />
-    </View>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.p1
+        }}
+      >
+        <ActivityIndicator
+          animating={true}
+          size="large"
+          style={{ opacity: 1 }}
+          color={colors.p1}
+        />
+      </View>
+    );
   }
   if (!isLoggedIn) {
     return <AuthNavigator />;

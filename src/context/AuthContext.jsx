@@ -1,32 +1,40 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { CITIES } from '../data';
-import { fetchAuthStateChanged, fetchUser } from '../firebase-api';
+import { fetchAuthStateChanged, fetchCurrentUser } from '../firebase-api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [hasAuthState, setHasAuthState] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedCity, setSelectedCity] = useState(CITIES[0]);
   const [drawerStatus, setDrawerStatus] = useState('close');
 
   useEffect(() => {
     let unsubscribe = () => {};
-    fetchAuthStateChanged(async (user) => {
+    const fetchUserDetails = async (user) => {
+      setIsLoggedIn(!!user);
       setHasAuthState(true);
-      if (user) {
-        unsubscribe = await fetchUser(
-          { uid: user.uid },
+      try {
+        unsubscribe = await fetchCurrentUser(
           (doc) => {
-            if (doc.data()) {
-              setCurrentUser(doc.data());
-            }
+            setCurrentUser(doc.data() ? doc.data() : null);
           },
-          (err) => console.log(err)
+          (err) => {
+            setCurrentUser(null);
+            console.log(err);
+          }
         );
+      } catch (err) {
+        console.log(err);
       }
-    });
-    return () => unsubscribe();
+    };
+    fetchAuthStateChanged(fetchUserDetails, (err) => console.log(err));
+    return () => {
+      setCurrentUser(null);
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -38,7 +46,9 @@ export const AuthProvider = ({ children }) => {
         setSelectedCity,
         hasAuthState,
         drawerStatus,
-        setDrawerStatus
+        setDrawerStatus,
+        isLoggedIn,
+        setIsLoggedIn
       }}
     >
       {children}
