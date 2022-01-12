@@ -143,9 +143,8 @@ export const apiSaveToken = (token) =>
     )
     .catch((err) => console.log(err));
 
-export const addCalendarIdToUser = (calendarId) => {
-  return firebase
-    .firestore()
+export const addCalendarIdToUser = (calendarId) =>
+  db
     .collection('users')
     .doc(firebase.auth().currentUser.uid)
     .set(
@@ -153,8 +152,8 @@ export const addCalendarIdToUser = (calendarId) => {
         calendarId: calendarId
       },
       { merge: true }
-    );
-};
+    )
+    .catch((err) => console.log(err));
 
 export const removeEventFromUsers = ({ eventId, calendarEventId }) =>
   db
@@ -168,7 +167,8 @@ export const removeEventFromUsers = ({ eventId, calendarEventId }) =>
         })
       },
       { merge: true }
-    );
+    )
+    .catch((err) => console.log(err));
 
 export const addEventToUser = ({ eventId, calendarEventId }) =>
   db
@@ -182,7 +182,8 @@ export const addEventToUser = ({ eventId, calendarEventId }) =>
         })
       },
       { merge: true }
-    );
+    )
+    .catch((err) => console.log(err));
 
 export const removeUserFromEvent = ({ eventId }) =>
   db
@@ -193,15 +194,36 @@ export const removeUserFromEvent = ({ eventId }) =>
         users: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid)
       },
       { merge: true }
-    );
+    )
+    .catch((err) => console.log(err));
 
-export const addUserToEvent = ({ eventId }) => {
-  db.collection('events')
+export const addUserToEvent = ({ eventId }) =>
+  db
+    .collection('events')
     .doc(eventId)
     .set(
       {
         users: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
       },
       { merge: true }
-    );
-};
+    )
+    .catch((err) => console.log(err));
+
+export const apiUpdateSettings = async (settings) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      {
+        settings
+      },
+      { merge: true }
+    )
+    .catch((err) => console.log(err));
+
+export const apiUpdateUser = async (data) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(data, { merge: true })
+    .catch((err) => console.log(err));

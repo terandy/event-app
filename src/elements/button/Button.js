@@ -5,7 +5,7 @@ import { useTheme } from 'react-native-paper';
 const sizes = {
   medium: { height: 52, fontSize: 27, padding: 12 },
   small: { height: 32, fontSize: 18, padding: 8 },
-  xsmall: { height: 24, fontSize: 14 }
+  xsmall: { height: 24, fontSize: 14, padding: 4 }
 };
 
 const Button = ({

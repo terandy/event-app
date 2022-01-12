@@ -7,6 +7,7 @@ export const palette = {
   g1: '#535353',
   g2: '#C4C4C4',
   g3: '#E8E8E8',
+  gr: '#5BCD89',
   /* black */
   b1: '#000000',
   /* primary */
