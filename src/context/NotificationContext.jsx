@@ -8,6 +8,7 @@ import React, {
   useCallback
 } from 'react';
 import { Platform } from 'react-native';
+import { apiSaveToken } from '../firebase-api';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -25,9 +26,7 @@ export function NotificationProvider({ children }) {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+    registerForPushNotificationsAsync().then((token) => apiSaveToken(token));
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {

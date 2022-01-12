@@ -130,3 +130,15 @@ export const apiCreateEvent = async ({ data, image, callback }) =>
       console.log(err);
       callback();
     });
+
+export const apiSaveToken = (token) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      {
+        token
+      },
+      { merge: true }
+    )
+    .catch((err) => console.log(err));
