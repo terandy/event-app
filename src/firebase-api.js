@@ -142,3 +142,66 @@ export const apiSaveToken = (token) =>
       { merge: true }
     )
     .catch((err) => console.log(err));
+
+export const addCalendarIdToUser = (calendarId) => {
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(firebase.auth().currentUser.uid)
+    .set(
+      {
+        calendarId: calendarId
+      },
+      { merge: true }
+    );
+};
+
+export const removeEventFromUsers = ({ eventId, calendarEventId }) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      {
+        events: firebase.firestore.FieldValue.arrayRemove({
+          eventId,
+          calendarEventId
+        })
+      },
+      { merge: true }
+    );
+
+export const addEventToUser = ({ eventId, calendarEventId }) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      {
+        events: firebase.firestore.FieldValue.arrayUnion({
+          eventId,
+          calendarEventId
+        })
+      },
+      { merge: true }
+    );
+
+export const removeUserFromEvent = ({ eventId }) =>
+  db
+    .collection('events')
+    .doc(eventId)
+    .set(
+      {
+        users: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid)
+      },
+      { merge: true }
+    );
+
+export const addUserToEvent = ({ eventId }) => {
+  db.collection('events')
+    .doc(eventId)
+    .set(
+      {
+        users: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+      },
+      { merge: true }
+    );
+};

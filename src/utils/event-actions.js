@@ -5,7 +5,7 @@ import {
   removeUserFromEvent,
   addEventToUser,
   addUserToEvent
-} from './firestore-actions';
+} from '../firebase-api';
 
 export const handleInterestPress = async (currentUser, event, isInterested) => {
   const { title, dateTime, frequency, id } = event;

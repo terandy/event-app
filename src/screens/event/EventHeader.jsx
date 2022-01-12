@@ -5,7 +5,7 @@ import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../../context';
 import { DAYS_OF_THE_WEEK } from '../../data';
 import { Title, IconButton } from '../../elements';
-import { extractDate, extractTime } from '../../utils';
+import { extractDate, extractTime, handleInterestPress } from '../../utils';
 
 const Header = ({ event, navigation }) => {
   const { currentUser } = useContext(AuthContext);
@@ -54,7 +54,7 @@ const Header = ({ event, navigation }) => {
       </Text>
       <View style={{ flexDirection: 'row' }}>
         <IconButton
-          // onPress={() => handleInterestPress(currentUser, event, isInterested)}
+          onPress={() => handleInterestPress(currentUser, event, isInterested)}
           title={isInterested ? 'Interested' : 'Show Interest'}
           icon={isInterested ? 'star' : 'star-outline'}
           color={colors.p2}

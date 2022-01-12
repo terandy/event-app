@@ -5,7 +5,7 @@ import { View, Pressable, Text } from 'react-native';
 import { AuthContext } from '../../context';
 import { Title, IconButton, Card, HatCircles } from '../../elements';
 import { DAYS_OF_THE_WEEK } from '../../data';
-import { extractDate, extractTime } from '../../utils';
+import { extractDate, extractTime, handleInterestPress } from '../../utils';
 
 const EventCard = ({ event, style, onPress }) => {
   const { currentUser } = useContext(AuthContext);
@@ -17,8 +17,6 @@ const EventCard = ({ event, style, onPress }) => {
 
   const isInterested =
     users && currentUser ? users.includes(currentUser.id) : false;
-
-  const handleInterestPress = () => {};
 
   return (
     <Card bg={colors.p4} style={style}>
@@ -38,7 +36,9 @@ const EventCard = ({ event, style, onPress }) => {
               <HatCircles hats={hats} />
             </View>
             <IconButton
-              onPress={handleInterestPress}
+              onPress={() =>
+                handleInterestPress(currentUser, event, isInterested)
+              }
               icon={isInterested ? 'star' : 'star-outline'}
               color={colors.p1}
               style={{ marginLeft: -6 }}
