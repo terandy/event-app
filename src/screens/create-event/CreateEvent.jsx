@@ -129,7 +129,7 @@ const CreateEvent = ({ navigation }) => {
               placeholder="write title..."
               onChangeText={(e) => setTitle(e)}
               value={title}
-              style={{ marginBottom: 24, height: 48 }}
+              style={{ marginBottom: 24 }}
             />
             <View
               style={{

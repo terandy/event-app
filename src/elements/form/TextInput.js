@@ -17,7 +17,13 @@ const TextInputStyled = ({
 }) => {
   const { colors } = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: colors.p4 }, style]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.p4, width: '100%' },
+        style
+      ]}
+    >
       {leftIcon && (
         <Icons
           name={leftIcon}
@@ -31,7 +37,13 @@ const TextInputStyled = ({
         placeholder={placeholder}
         onChangeText={onChangeText}
         numberOfLines={numberOfLines}
-        style={[{ width: '100%', textAlignVertical: 'top' }]}
+        style={[
+          {
+            flex: 1,
+            textAlignVertical: 'top',
+            paddingTop: 8
+          }
+        ]}
       />
       {rightIcon && (
         <TouchableOpacity onPress={handlePasswordVisibility}>
@@ -39,7 +51,10 @@ const TextInputStyled = ({
             name={rightIcon}
             color={colors.p1}
             size={20}
-            style={{ alignSelf: 'center', marginLeft: 10 }}
+            style={{
+              alignSelf: 'center',
+              marginLeft: 10
+            }}
           />
         </TouchableOpacity>
       )}

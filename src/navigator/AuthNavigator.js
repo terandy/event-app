@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { Landing, Login, Register } from '../screens';
+import { Landing, Login, Register, Eula } from '../screens';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +13,7 @@ const AuthNavigator = () => {
       />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Eula" component={Eula} />
     </Stack.Navigator>
   );
 };

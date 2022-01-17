@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { Text, View } from 'react-native';
+import { Checkbox, useTheme } from 'react-native-paper';
 
 import { TextInput, Button, Error } from '../../elements';
 import { apiRegister } from '../../firebase-api';
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const { colors } = useTheme();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -13,6 +13,7 @@ const Register = () => {
   const [error, setError] = useState();
   const [rightIcon, setRightIcon] = useState('eye');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [eulaStatus, setEulaStatus] = useState(false);
 
   const handleSignUp = useCallback(async () => {
     if (email && name && password) {
@@ -64,14 +65,32 @@ const Register = () => {
         placeholder="Enter password"
         onChangeText={(e) => setPassword(e)}
         autoCapitalize="none"
-        style={{ marginBottom: 32 }}
+        style={{ marginBottom: 16, width: '100%' }}
       />
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 32 }}
+      >
+        <Checkbox
+          status={eulaStatus ? 'checked' : 'unchecked'}
+          onPress={() => setEulaStatus(!eulaStatus)}
+          color={colors.p1}
+        />
+        <Text>
+          Agree to{' '}
+          <Text
+            onPress={() => navigation.navigate('Eula')}
+            style={{ color: colors.p1, textDecorationLine: 'underline' }}
+          >
+            Terms and Conditions
+          </Text>
+        </Text>
+      </View>
       {error && <Error message={error} style={{ marginBottom: 32 }} />}
       <Button
         title="Sign up"
         size="small"
         onPress={handleSignUp}
-        disabled={!email | !password | !name}
+        disabled={!email | !password | !name | !eulaStatus}
       />
     </View>
   );
