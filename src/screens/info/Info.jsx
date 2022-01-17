@@ -14,7 +14,7 @@ import { Title, ExternalLink, Layout } from '../../elements';
 import { PersonCard } from '../../components';
 import { padding } from '../../theme';
 
-const Info = () => {
+const Info = ({ navigation }) => {
   const { colors } = useTheme();
   const [error, setError] = useState(false);
   const people = [
@@ -117,12 +117,20 @@ const Info = () => {
           title={'Watch an ad'}
           onPress={handleWatchAdd}
           size="small"
+          style={{ marginBottom: 12 }}
         />
         {error && (
-          <Text style={{ textAlign: 'center', marginTop: 4, color: colors.p1 }}>
+          <Text
+            style={{ textAlign: 'center', marginBottom: 12, color: colors.p1 }}
+          >
             No ads currently
           </Text>
         )}
+        <ExternalLink
+          title={'View End-User License Agreement'}
+          onPress={() => navigation.navigate('Eula')}
+          size="small"
+        />
 
         <Text style={{ textAlign: 'center', marginTop: 88 }}>
           Contact us via

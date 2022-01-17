@@ -4,7 +4,8 @@ import {
   EventScreen,
   EditEventScreen,
   DeleteEventScreen,
-  CreateEventScreen
+  CreateEventScreen,
+  Eula
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { createMyNavigator } from './createMyNavigator';
@@ -48,6 +49,11 @@ function MyNavigator() {
         name="Create Event"
         component={CreateEventScreen}
         options={{ title: 'Create Event' }}
+      />
+      <My.Screen
+        name="Eula"
+        component={Eula}
+        options={{ title: 'Eula', hide: true }}
       />
     </My.Navigator>
   );
