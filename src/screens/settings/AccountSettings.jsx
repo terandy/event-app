@@ -1,19 +1,12 @@
 import { useContext, useState } from 'react';
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import { AuthContext } from '../../context';
-import {
-  Title,
-  TextInput,
-  Button,
-  IconButton,
-  PillButton
-} from '../../elements';
+import { Title, TextInput, IconButton, PillButton } from '../../elements';
 import { apiUpdateUser } from '../../firebase-api';
 import { padding } from '../../theme';
-// import { apiUpdateUser } from '../../firebase-api';
-// import { AuthContext } from '../../context';
+import BlockedUsers from './BlockedUsers';
 
 const AccountSettings = () => {
   const { colors } = useTheme();
@@ -104,12 +97,24 @@ const AccountSettings = () => {
         <Title size="small">Email </Title>
         <Text style={{ color: colors.g1 }}>{email}</Text>
       </View>
+      {currentUser &&
+        currentUser.blockedUsers &&
+        currentUser.blockedUsers.length > 0 && (
+          <View style={styles.title}>
+            <Title size="small">Blocked Users </Title>
+            <BlockedUsers />
+          </View>
+        )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  margins: { paddingLeft: padding.xsmall, paddingRight: padding.xsmall },
+  margins: {
+    paddingLeft: padding.xsmall,
+    paddingRight: padding.xsmall,
+    paddingBottom: padding.xsmall
+  },
   title: { marginBottom: padding.xsmall, marginTop: padding.xsmall }
 });
 

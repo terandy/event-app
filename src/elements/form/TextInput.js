@@ -1,5 +1,11 @@
 import React from 'react';
-import { TextInput, StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Platform
+} from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -41,7 +47,7 @@ const TextInputStyled = ({
           {
             flex: 1,
             textAlignVertical: 'top',
-            paddingTop: 8
+            paddingTop: Platform.OS === 'ios' ? 0 : 8
           }
         ]}
       />

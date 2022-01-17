@@ -34,11 +34,17 @@ export const fetchEvents = async (callback, errorCallback) =>
     .orderBy('dateTime', 'asc')
     .onSnapshot(callback, errorCallback);
 
+export const fetchUsers = async (callback, errorCallback) =>
+  db.collection('users').onSnapshot(callback, errorCallback);
+
 export const fetchCurrentUser = async (callback, errorCallback) =>
   db
     .collection('users')
     .doc(auth.currentUser.uid)
     .onSnapshot(callback, errorCallback);
+
+export const fetchUser = async ({ userId }, callback, errorCallback) =>
+  db.collection('users').doc(userId).onSnapshot(callback, errorCallback);
 
 export const fetchEvent = async ({ id }, callback, errorCallback) =>
   db.collection('events').doc(id).onSnapshot(callback, errorCallback);
@@ -227,3 +233,21 @@ export const apiUpdateUser = async (data) =>
     .doc(auth.currentUser.uid)
     .set(data, { merge: true })
     .catch((err) => console.log(err));
+
+export const apiBlockUser = async ({ user }) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      { blockedUsers: firebase.firestore.FieldValue.arrayUnion(user.id) },
+      { merge: true }
+    );
+
+export const apiUnblockUser = async ({ userId }) =>
+  db
+    .collection('users')
+    .doc(auth.currentUser.uid)
+    .set(
+      { blockedUsers: firebase.firestore.FieldValue.arrayRemove(userId) },
+      { merge: true }
+    );

@@ -126,11 +126,6 @@ const Info = ({ navigation }) => {
             No ads currently
           </Text>
         )}
-        <ExternalLink
-          title={'View End-User License Agreement'}
-          onPress={() => navigation.navigate('Eula')}
-          size="small"
-        />
 
         <Text style={{ textAlign: 'center', marginTop: 88 }}>
           Contact us via
@@ -140,6 +135,15 @@ const Info = ({ navigation }) => {
           style={{ textAlign: 'center', marginBottom: 32, color: colors.p1 }}
         >
           yspcanada@outlook.com
+        </Text>
+        <Text style={{ textAlign: 'center' }}>
+          Notify us of any inapropriate content via
+        </Text>
+        <Text
+          selectable={true}
+          style={{ textAlign: 'center', marginBottom: 32, color: colors.p1 }}
+        >
+          teresa.s.lacroix@gmail.com
         </Text>
         <Text style={{ textAlign: 'center' }}>Or visit us on</Text>
         <Pressable
@@ -158,6 +162,18 @@ const Info = ({ navigation }) => {
             }}
           >
             www.yspcanada.org
+          </Text>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('Eula')}>
+          <Text
+            style={{
+              textAlign: 'center',
+              marginBottom: 32,
+              color: colors.p1,
+              textDecorationLine: 'underline'
+            }}
+          >
+            End-User License Agreement
           </Text>
         </Pressable>
         <Text style={{ textAlign: 'center', marginBottom: 12 }}>

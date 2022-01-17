@@ -20,6 +20,7 @@
     "expo-ads-admob": "~12.0.0",
     "expo-blur": "~11.0.0",
     "expo-calendar": "~10.1.0",
+    "expo-checkbox": "~2.0.0",
     "expo-constants": "~13.0.0",
     "expo-image-picker": "~12.0.1",
     "expo-notifications": "~0.14.0",

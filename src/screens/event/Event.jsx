@@ -62,12 +62,24 @@ const Event = ({ navigation, route }) => {
         <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
           <Header event={event} navigation={navigation} />
           <EventImage event={event} />
-          <Details event={event} />
+          <Details
+            event={event}
+            blockUser={({ user }) => {
+              navigation.navigate('Block User', { userId: user.id });
+            }}
+          />
           <Line style={{ marginVertical: 20 }} />
           <Title style={{ marginBottom: 20 }}>Comments</Title>
           {event.messages?.map((message, index) => (
             <View style={{ marginBottom: 12 }} key={`${index}`}>
-              <Comment comment={message} />
+              <Comment
+                comment={message}
+                blockUser={() => {
+                  navigation.navigate('Block User', {
+                    userId: message.user
+                  });
+                }}
+              />
             </View>
           ))}
         </ScrollView>

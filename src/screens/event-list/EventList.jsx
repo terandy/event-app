@@ -9,10 +9,14 @@ import { EventCard } from '../../components';
 function EventListScreen({ navigation }) {
   const { selectedCity } = useContext(AuthContext);
   const { events } = useContext(EventContext);
+  const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
 
   const upcomingEvents = events?.filter(
     (event) =>
+      currentUser &&
+      (!currentUser.blockedUsers ||
+        !currentUser.blockedUsers.includes(event.creator)) &&
       event.cities.includes(selectedCity) &&
       (event.frequency !== '' ||
         event.dateTime.toDate() >= new Date(Date.now()))

@@ -14,7 +14,7 @@ const CommentInput = ({ event }) => {
 
   const saveComment = () => {
     const newComment = {
-      user: currentUser.name,
+      user: currentUser.id,
       comment,
       createdDate: Date.now()
     };

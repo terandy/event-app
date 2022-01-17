@@ -6,3 +6,4 @@ export * from './event';
 export * from './edit-event';
 export * from './create-event';
 export * from './auth';
+export * from './block-user';

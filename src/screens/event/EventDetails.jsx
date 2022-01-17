@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Linking } from 'react-native';
+import { View, Text, Linking, Pressable } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import { ExternalLink, PillButton } from '../../elements';
-import { HATS, HAT_COLORS } from '../../data';
+import { HAT_COLORS } from '../../data';
 import { fetchOrganiser } from '../../firebase-api';
 
-const Details = ({ event }) => {
+const Details = ({ event, blockUser }) => {
   const { colors } = useTheme();
   const [organiser, setOrganiser] = useState('');
+  const [showOptions, setShowOptions] = useState(false);
   const { description, creator } = event;
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const Details = ({ event }) => {
           { creator },
           (doc) => {
             if (doc.data()) {
-              setOrganiser(doc.data().name);
+              setOrganiser(doc.data());
             }
           },
           (err) => console.log(err)
@@ -83,9 +84,30 @@ const Details = ({ event }) => {
           style={{ marginBottom: 24 }}
         />
       )}
-      <Text style={{ color: colors.p2, marginBottom: 10 }}>
-        Event by {organiser}
-      </Text>
+      <Pressable
+        onLongPress={() => setShowOptions(!showOptions)}
+        onPress={() => setShowOptions(false)}
+      >
+        <Text style={{ color: colors.p2, marginBottom: 10 }}>
+          Event by {organiser.name}
+        </Text>
+      </Pressable>
+      {showOptions && (
+        <Pressable
+          style={{
+            backgroundColor: colors.g1,
+            padding: 8,
+            borderRadius: 8,
+            marginTop: 8
+          }}
+          onPress={() => {
+            blockUser({ user: organiser });
+            setShowOptions(false);
+          }}
+        >
+          <Text style={{ color: colors.r1 }}>Block User</Text>
+        </Pressable>
+      )}
     </>
   );
 };

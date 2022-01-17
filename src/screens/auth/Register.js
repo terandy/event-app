@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Text, View } from 'react-native';
-import { Checkbox, useTheme } from 'react-native-paper';
+import Checkbox from 'expo-checkbox';
+import { useTheme } from 'react-native-paper';
 
 import { TextInput, Button, Error } from '../../elements';
 import { apiRegister } from '../../firebase-api';
@@ -65,15 +66,16 @@ const Register = ({ navigation }) => {
         placeholder="Enter password"
         onChangeText={(e) => setPassword(e)}
         autoCapitalize="none"
-        style={{ marginBottom: 16, width: '100%' }}
+        style={{ marginBottom: 16 }}
       />
       <View
         style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 32 }}
       >
         <Checkbox
-          status={eulaStatus ? 'checked' : 'unchecked'}
-          onPress={() => setEulaStatus(!eulaStatus)}
-          color={colors.p1}
+          value={eulaStatus}
+          onValueChange={() => setEulaStatus(!eulaStatus)}
+          color={eulaStatus ? colors.p1 : undefined}
+          style={{ marginRight: 8 }}
         />
         <Text>
           Agree to{' '}

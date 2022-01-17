@@ -19,13 +19,13 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.3.8',
+      buildNumber: '1.4.0',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~5676793545'
       },
       infoPlist: {
         NSUserTrackingUsageDescription:
-          "We will update your device's Calendar with events you are interested in."
+          "We need permission to access your device's calendar in order to save events you are interested in."
       }
     },
     android: {
@@ -34,7 +34,7 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 36,
+      versionCode: 40,
       googleServicesFile: './google-services.json',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~3840967691'
