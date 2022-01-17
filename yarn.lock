@@ -2981,6 +2981,13 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+expo-ads-admob@~12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/expo-ads-admob/-/expo-ads-admob-12.0.0.tgz#0504fdbdf23e7ae0a65c5604dd81f2bb741a7160"
+  integrity sha512-wJsq5eM4MHbra2gqj8QPO6nPiGtwdgC5Lb0DdEZa7aEKFnr74xTUxfuf2CxhgzTk2F6N+PmmN9udfywilz+Kkg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.2"
+
 expo-application@~4.0.0, expo-application@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-4.0.1.tgz#d38a1315c06c253b843c951ddc6fbb9a026f05cc"
@@ -3098,6 +3105,13 @@ expo-status-bar@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.2.0.tgz#16e73205da563f9536f562e439081e30e318a82e"
   integrity sha512-pVZZ/kDCXFK79E4dCtRecs3XLC8aiwlciutSd/fFmUPJSQZ1Txia6hlKajPt0GAYft8/YnT0V3URXzWZOBniYQ==
+
+expo-tracking-transparency@~2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/expo-tracking-transparency/-/expo-tracking-transparency-2.1.0.tgz#74f44d660f0d0679fec556b3c76a22a930116e74"
+  integrity sha512-I63RxvM/gv/+1YlWaSA0wbBIZayPZ/fw2Ptg2NfPgFNYoEPBvCe+r7Ni3giODGsl3YEdPQyF1gJDr0/PO1QHsg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.2"
 
 expo@~44.0.0:
   version "44.0.4"

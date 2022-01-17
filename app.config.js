@@ -19,7 +19,14 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.3.5'
+      buildNumber: '1.3.8',
+      config: {
+        googleMobileAdsAppId: 'ca-app-pub-5055103069379901~5676793545'
+      },
+      infoPlist: {
+        NSUserTrackingUsageDescription:
+          "We will update your device's Calendar with events you are interested in."
+      }
     },
     android: {
       adaptiveIcon: {
@@ -27,12 +34,24 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 35,
-      googleServicesFile: './google-services.json'
+      versionCode: 36,
+      googleServicesFile: './google-services.json',
+      config: {
+        googleMobileAdsAppId: 'ca-app-pub-5055103069379901~3840967691'
+      }
     },
     web: {
       favicon: './assets/favicon.png'
     },
+    plugins: [
+      [
+        'expo-tracking-transparency',
+        {
+          userTrackingPermission:
+            "We will update your device's Calendar with events you are interested in."
+        }
+      ]
+    ],
     extra: {
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,

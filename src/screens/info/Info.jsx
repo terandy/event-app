@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   ScrollView
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-// import { AdMobInterstitial } from 'expo-ads-admob';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 import { Title, ExternalLink, Layout } from '../../elements';
 import { PersonCard } from '../../components';
@@ -16,6 +16,7 @@ import { padding } from '../../theme';
 
 const Info = () => {
   const { colors } = useTheme();
+  const [error, setError] = useState(false);
   const people = [
     {
       displayName: 'Koshin Young',
@@ -51,22 +52,22 @@ const Info = () => {
 
   const adUnitId =
     Platform.os === 'ios'
-      ? 'ca-app-pub-5055103069379901/3913750773'
-      : 'ca-app-pub-5055103069379901/2531536284';
-  // const showInterstitial = async () => {
-  //   try {
-  //     await AdMobInterstitial.setAdUnitID(adUnitId);
-  //     await AdMobInterstitial.requestAdAsync({
-  //       servePersonalizedAds: true
-  //     });
-  //     await AdMobInterstitial.showAdAsync();
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  // const handleWatchAdd = () => {
-  //   showInterstitial();
-  // };
+      ? 'ca-app-pub-5055103069379901/3144454389'
+      : 'ca-app-pub-5055103069379901/9354639511';
+  const showInterstitial = async () => {
+    try {
+      await AdMobInterstitial.setAdUnitID(adUnitId);
+      await AdMobInterstitial.requestAdAsync({
+        servePersonalizedAds: true
+      });
+      await AdMobInterstitial.showAdAsync();
+    } catch (err) {
+      setError(true);
+    }
+  };
+  const handleWatchAdd = () => {
+    showInterstitial();
+  };
 
   return (
     <Layout style={{ paddingHorizontal: 0 }}>
@@ -112,11 +113,16 @@ const Info = () => {
           size="small"
           style={{ marginBottom: 12 }}
         />
-        {/* <ExternalLink
+        <ExternalLink
           title={'Watch an ad'}
           onPress={handleWatchAdd}
           size="small"
-        /> */}
+        />
+        {error && (
+          <Text style={{ textAlign: 'center', marginTop: 4, color: colors.p1 }}>
+            No ads currently
+          </Text>
+        )}
 
         <Text style={{ textAlign: 'center', marginTop: 88 }}>
           Contact us via
