@@ -31,25 +31,27 @@ export function NotificationProvider({ children }) {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => apiSaveToken(token));
+    if (currentUser) {
+      registerForPushNotificationsAsync().then((token) => apiSaveToken(token));
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        // This listener is fired whenever a notification is received while the app is foregrounded
-      });
+      notificationListener.current =
+        Notifications.addNotificationReceivedListener((notification) => {
+          // This listener is fired whenever a notification is received while the app is foregrounded
+        });
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-      });
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener((response) => {
+          // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        });
 
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+      return () => {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {

@@ -2,13 +2,8 @@ import { auth, db } from '../firebase';
 import { DEFAULT_USER_SETTINGS } from './data';
 import * as firebase from 'firebase';
 
-export const fetchAuthStateChanged = (callback) => {
-  try {
-    auth.onAuthStateChanged(callback);
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const fetchAuthStateChanged = (callback) =>
+  auth.onAuthStateChanged(callback);
 
 export const apiLogout = async () => auth.signOut();
 
@@ -152,7 +147,7 @@ export const apiSaveToken = (token) =>
 export const addCalendarIdToUser = (calendarId) =>
   db
     .collection('users')
-    .doc(firebase.auth().currentUser.uid)
+    .doc(auth.currentUser.uid)
     .set(
       {
         calendarId: calendarId

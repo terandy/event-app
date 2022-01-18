@@ -1,11 +1,16 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { CITIES } from '../data';
-import { fetchAuthStateChanged, fetchCurrentUser } from '../firebase-api';
+import {
+  fetchAuthStateChanged,
+  fetchCurrentUser,
+  fetchUsers
+} from '../firebase-api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [users, setUsers] = useState(null);
   const [hasAuthState, setHasAuthState] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedCity, setSelectedCity] = useState(CITIES[0]);
@@ -16,26 +21,48 @@ export const AuthProvider = ({ children }) => {
     const fetchUserDetails = async (user) => {
       setIsLoggedIn(!!user);
       setHasAuthState(true);
-      try {
+      if (user) {
         unsubscribe = await fetchCurrentUser(
           (doc) => {
             setCurrentUser(doc.data() ? doc.data() : null);
           },
           (err) => {
-            setCurrentUser(null);
             console.log(err);
           }
         );
-      } catch (err) {
-        console.log(err);
       }
     };
-    fetchAuthStateChanged(fetchUserDetails, (err) => console.log(err));
-    return () => {
-      setCurrentUser(null);
-      unsubscribe();
-    };
+    try {
+      fetchAuthStateChanged(fetchUserDetails, (err) => console.log(err));
+    } catch (err) {
+      console.log(err);
+      unsubscribe = () => {};
+    }
+    return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    let unsubscribe = () => {};
+    const callback = async () => {
+      unsubscribe = await fetchUsers(
+        (snapshot) => {
+          if (snapshot.size) {
+            let users = snapshot.docs.map((doc) => doc.data());
+            setUsers(users);
+          }
+        },
+        (err) => console.log(err)
+      );
+    };
+    callback();
+    return () => unsubscribe();
+  }, []);
+
+  let blockedUsers = [];
+  if (users && currentUser && currentUser.blockedUsers)
+    blockedUsers = users.filter((usr) =>
+      currentUser.blockedUsers.includes(usr.id)
+    );
 
   return (
     <AuthContext.Provider
@@ -48,7 +75,8 @@ export const AuthProvider = ({ children }) => {
         drawerStatus,
         setDrawerStatus,
         isLoggedIn,
-        setIsLoggedIn
+        setIsLoggedIn,
+        blockedUsers
       }}
     >
       {children}

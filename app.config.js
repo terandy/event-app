@@ -19,7 +19,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.4.3',
+      buildNumber: '1.4.8',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~5676793545'
       },
@@ -34,7 +34,7 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 43,
+      versionCode: 48,
       googleServicesFile: './google-services.json',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~3840967691'

@@ -14,7 +14,7 @@ import { padding } from '../../theme';
 
 const Drawer = ({ navigation, descriptors, state }) => {
   const { colors } = useTheme();
-  const { setCurrentUser, drawerStatus, setDrawerStatus, setLoggedIn } =
+  const { setCurrentUser, drawerStatus, setDrawerStatus, setIsLoggedIn } =
     useContext(AuthContext);
   const [height, setHeight] = useState(600);
   const anim = useRef(new Animated.Value(0)).current;
@@ -26,7 +26,7 @@ const Drawer = ({ navigation, descriptors, state }) => {
     apiLogout()
       .then(() => {
         setCurrentUser(null);
-        setLoggedIn(false);
+        setIsLoggedIn(false);
       })
       .catch((err) => console.log(err));
   };
