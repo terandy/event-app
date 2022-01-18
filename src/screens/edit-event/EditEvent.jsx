@@ -168,7 +168,7 @@ const CreateEvent = ({ navigation, route }) => {
   }
 
   return (
-    <Layout style={{ paddingHorizontal: 0, flex: 1 }}>
+    <Layout>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{

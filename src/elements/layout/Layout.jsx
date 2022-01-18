@@ -35,7 +35,6 @@ const Layout = ({ children, style }) => {
 const stylesheet = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: padding.medium,
     paddingTop: Platform.OS === 'ios' ? 0 : statusBarHeight,
     backgroundColor: 'white'
   }

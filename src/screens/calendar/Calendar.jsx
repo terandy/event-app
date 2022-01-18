@@ -111,7 +111,7 @@ function CalendarScreen({ navigation }) {
   }
 
   return (
-    <Layout style={style.layout}>
+    <Layout>
       <View
         style={style.container}
         onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
@@ -136,7 +136,6 @@ function CalendarScreen({ navigation }) {
 }
 
 const style = StyleSheet.create({
-  layout: { paddingHorizontal: 0 },
   container: {
     position: 'relative',
     flex: 1

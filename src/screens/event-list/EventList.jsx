@@ -28,7 +28,7 @@ function EventListScreen({ navigation }) {
     return <Loading />;
   }
   return (
-    <Layout style={{ paddingHorizontal: 0 }}>
+    <Layout>
       <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
         <Title size="large">Upcoming Events</Title>
         {upcomingEvents.map((event) => (

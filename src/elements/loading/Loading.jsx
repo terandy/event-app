@@ -3,7 +3,7 @@ import { Layout } from '../layout';
 
 const Loading = () => {
   return (
-    <Layout style={{ padding: 0 }}>
+    <Layout>
       <View style={[styles.page]}>
         <ActivityIndicator
           animating={true}

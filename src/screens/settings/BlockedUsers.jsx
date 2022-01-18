@@ -38,11 +38,11 @@ const BlockedUsers = () => {
       setUsers(null);
       unsubscribe();
     };
-  }, [currentUser?.blockedUsers?.length]);
+  }, []);
 
   useEffect(() => {
-    if (users && currentUser) {
-      const blockedUsers = currentUser.blockedUsers?.map((userId) => {
+    if (users && currentUser && currentUser.blockedUsers) {
+      const blockedUsers = currentUser.blockedUsers.map((userId) => {
         const user = users.find((usr) => usr.id === userId);
         return user;
       });

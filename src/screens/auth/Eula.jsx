@@ -5,7 +5,7 @@ import { Title, Layout } from '../../elements';
 const Eula = () => {
   const { colors } = useTheme();
   return (
-    <Layout style={{ paddingHorizontal: 0 }}>
+    <Layout>
       <ScrollView style={{ padding: 16 }}>
         <Title style={{ marginBottom: 10 }}>
           End-User License Agreement ("Agreement")

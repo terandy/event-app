@@ -70,7 +70,7 @@ const Info = ({ navigation }) => {
   };
 
   return (
-    <Layout style={{ paddingHorizontal: 0 }}>
+    <Layout>
       <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
         <Title size="large">About</Title>
         <Text>

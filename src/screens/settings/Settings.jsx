@@ -9,7 +9,7 @@ import { padding } from '../../theme';
 
 const Settings = () => {
   return (
-    <Layout style={{ paddingHorizontal: 0 }}>
+    <Layout>
       <ScrollView
         style={{
           paddingHorizontal: padding.medium,
