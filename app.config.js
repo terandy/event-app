@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'YSP Pilot',
+    name: 'YSP Canada',
     slug: 'ysp-app',
     version: '1.0.0',
     orientation: 'portrait',
@@ -19,13 +19,13 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.4.8',
+      buildNumber: '1.5.0',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~5676793545'
       },
       infoPlist: {
-        NSUserTrackingUsageDescription:
-          "We need permission to access your device's calendar in order to save events you are interested in."
+        NSCalendarsUsageDescription:
+          "We need permission to access your device's calendar to save events you are interested in."
       }
     },
     android: {
@@ -34,7 +34,7 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 48,
+      versionCode: 50,
       googleServicesFile: './google-services.json',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~3840967691'

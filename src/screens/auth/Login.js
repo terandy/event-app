@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import { TextInput, Button, Error } from '../../elements';
@@ -52,7 +52,8 @@ const Login = () => {
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{
         padding: 20,
         flex: 1,
@@ -98,7 +99,7 @@ const Login = () => {
         style={{ backgroundColor: 'none' }}
         size="small"
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

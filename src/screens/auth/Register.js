@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useTheme } from 'react-native-paper';
 
@@ -35,13 +35,14 @@ const Register = ({ navigation }) => {
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{
+        backgroundColor: colors.g2,
         padding: 20,
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.g2
+        alignItems: 'center'
       }}
     >
       <TextInput
@@ -69,7 +70,11 @@ const Register = ({ navigation }) => {
         style={{ marginBottom: 16 }}
       />
       <View
-        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 32 }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 32
+        }}
       >
         <Checkbox
           value={eulaStatus}
@@ -94,7 +99,7 @@ const Register = ({ navigation }) => {
         onPress={handleSignUp}
         disabled={!email | !password | !name | !eulaStatus}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
