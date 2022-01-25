@@ -12,15 +12,17 @@ function EventListScreen({ navigation }) {
   const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
 
-  const upcomingEvents = events?.filter(
-    (event) =>
+  const upcomingEvents = events?.filter((event) => {
+    const today = new Date(Date.now());
+    today.setHours(0, 0, 0, 0);
+    return (
       currentUser &&
       (!currentUser.blockedUsers ||
         !currentUser.blockedUsers.includes(event.creator)) &&
       event.cities.includes(selectedCity) &&
-      (event.frequency !== '' ||
-        event.dateTime.toDate() >= new Date(Date.now()))
-  );
+      (event.frequency !== '' || event.dateTime.toDate() >= today)
+    );
+  });
   const handleEventPress = (id) => {
     navigation.navigate('Event', { id });
   };

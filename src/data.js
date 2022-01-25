@@ -9,7 +9,7 @@ export const ICON_SIZE =
 export const CITIES = ['MTL', 'TOR', 'VAN'];
 export const HATS = ['YSP', 'UPF', 'WFWP', 'FFWPU'];
 export const HAT_COLORS = {
-  YSP: 'p1',
+  YSP: 'i1',
   UPF: 'r1',
   WFWP: 't1',
   FFWPU: 'y1'

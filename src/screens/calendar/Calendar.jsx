@@ -40,7 +40,7 @@ function CalendarScreen({ navigation }) {
             selectedDate.day
           );
           const eventDate = new Date(event.dateTime.toDate());
-          return isSameDay(date, eventDate, event.frequency);
+          return isSameDay(date, eventDate, event.frequency, event.isRecurring);
         })
         .sort(function (a, b) {
           return a.dateTime
@@ -94,7 +94,9 @@ function CalendarScreen({ navigation }) {
         if (event.frequency !== '') {
           for (let i = -7; i < 40; i++) {
             const date = new Date(selectedDate.year, selectedDate.month - 1, i);
-            if (isSameDay(date, eventDate, event.frequency)) {
+            if (
+              isSameDay(date, eventDate, event.frequency, event.isRecurring)
+            ) {
               addEvent(event, formatCalendarDate(date));
             }
           }

@@ -10,7 +10,7 @@ import { extractDate, extractTime, handleInterestPress } from '../../utils';
 const Header = ({ event, navigation }) => {
   const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
-  const { title, dateTime, frequency, users, id, creator } = event;
+  const { title, dateTime, frequency, users, id, creator, isRecurring } = event;
 
   const displayDate = extractDate(dateTime);
   const displayTime = extractTime(dateTime);
@@ -43,7 +43,7 @@ const Header = ({ event, navigation }) => {
         )}
       </View>
       <Text style={{ color: colors.p2, fontSize: 14 }}>
-        {frequency !== ''
+        {isRecurring
           ? frequency == 'WEEKLY'
             ? `Every ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]} `
             : frequency == 'BI-WEEKLY'

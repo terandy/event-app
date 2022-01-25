@@ -12,8 +12,8 @@ const MONTHS = [
   'Nov',
   'Dec'
 ];
-export const isSameDay = (someDate, otherDate, frequency) => {
-  if (frequency === '') {
+export const isSameDay = (someDate, otherDate, frequency, isRecurring) => {
+  if (!isRecurring) {
     return (
       someDate.getDate() == otherDate.getDate() &&
       someDate.getMonth() == otherDate.getMonth() &&

@@ -22,7 +22,9 @@ export const palette = {
   /* turquoise */
   t1: '#419A94',
   /* yellow */
-  y1: '#FFB952'
+  y1: '#FFB952',
+  /* blue */
+  i1: '#35baf6'
 };
 
 export const padding = {

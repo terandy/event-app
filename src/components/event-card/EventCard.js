@@ -23,13 +23,23 @@ const EventCard = ({ event, style, onPress }) => {
       <Pressable onPress={onPress}>
         <View style={{ marginBottom: 18 }}>
           <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start'
+            }}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                flex: 1
+              }}
+            >
               <Title
                 size="medium"
                 margin={0}
-                style={{ marginBottom: 5, marginRight: 10 }}
+                style={{ marginBottom: 5, marginRight: 10, flex: 1 }}
               >
                 {title}
               </Title>
@@ -41,7 +51,7 @@ const EventCard = ({ event, style, onPress }) => {
               }
               icon={isInterested ? 'star' : 'star-outline'}
               color={colors.p1}
-              style={{ marginLeft: -6 }}
+              style={{ marginTop: -6, marginRight: -12 }}
             />
           </View>
           <Text style={{ color: colors.p2, fontSize: 13 }}>
