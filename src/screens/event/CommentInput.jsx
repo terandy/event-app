@@ -16,7 +16,7 @@ const CommentInput = ({ event }) => {
     const newComment = {
       user: currentUser.id,
       comment,
-      createdDate: Date.now()
+      createdDate: new Date(Date.now())
     };
     apiSetMessages({ newComment, id, messages })
       .then((res) => {

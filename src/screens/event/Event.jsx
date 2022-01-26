@@ -79,6 +79,9 @@ const Event = ({ navigation, route }) => {
                     userId: message.user
                   });
                 }}
+                prevDate={
+                  index > 0 ? event.messages[index - 1].createdDate : null
+                }
               />
             </View>
           ))}

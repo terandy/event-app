@@ -53,7 +53,7 @@ export const apiSetMessages = async ({ id, newComment, messages }) => {
     .doc(id)
     .update(
       {
-        messages: messages ? [newComment].concat(messages) : [newComment]
+        messages: messages ? messages.concat(newComment) : [newComment]
       },
       { merge: true }
     );
