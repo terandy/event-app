@@ -5,7 +5,7 @@ import { Provider as PaperProvider, useTheme } from 'react-native-paper';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 import { NotificationProvider, AuthProvider, AuthContext } from './src/context';
-import { MyNavigator, AuthNavigator } from './src/navigator';
+import { MyNavigator, AuthNavigator, navigationRef } from './src/navigator';
 import { theme } from './src/theme';
 
 LogBox.ignoreLogs([
@@ -55,7 +55,7 @@ function App() {
 export default () => (
   <AuthProvider>
     <NotificationProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <PaperProvider theme={theme}>
           <App />
         </PaperProvider>

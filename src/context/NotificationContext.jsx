@@ -1,19 +1,13 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Calendar from 'expo-calendar';
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  createContext,
-  useCallback,
-  useContext
-} from 'react';
+import React, { useEffect, useRef, createContext, useContext } from 'react';
 import { Platform } from 'react-native';
 import { apiSaveToken, addCalendarIdToUser } from '../firebase-api';
 import { getCalendarByName, createCalendar } from '../utils';
 import { CALENDAR_NAME } from '../data';
 import { AuthContext } from './AuthContext';
+import * as RootNavigation from '../navigator/RootNavigator';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -42,6 +36,10 @@ export function NotificationProvider({ children }) {
       responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
           // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+          const eventId = response.notification.request.content.data.id;
+          if (eventId) {
+            RootNavigation.navigate('Event', { id: eventId });
+          }
         });
 
       return () => {
