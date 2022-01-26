@@ -10,7 +10,16 @@ import { extractDate, extractTime, handleInterestPress } from '../../utils';
 const EventCard = ({ event, style, onPress }) => {
   const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
-  const { id, title, description, hats, dateTime, frequency, users } = event;
+  const {
+    id,
+    title,
+    description,
+    hats,
+    dateTime,
+    frequency,
+    users,
+    isRecurring
+  } = event;
 
   const displayDate = extractDate(dateTime);
   const displayTime = extractTime(dateTime);
@@ -55,7 +64,7 @@ const EventCard = ({ event, style, onPress }) => {
             />
           </View>
           <Text style={{ color: colors.p2, fontSize: 13 }}>
-            {frequency == ''
+            {!isRecurring
               ? displayDate
               : frequency == 'WEEKLY'
               ? `Every ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]} `
