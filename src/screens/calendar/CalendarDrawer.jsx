@@ -3,7 +3,9 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Animated
+  Animated,
+  Text,
+  View
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -17,9 +19,13 @@ import { ICON_SIZE } from '../../data';
 const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
   const { colors } = useTheme();
 
-  const animOptions = {
+  const heightOptions = {
     inputRange: [0, 1],
-    outputRange: [120, 600] // <-- any value larger than your content's height
+    outputRange: [120, 600]
+  };
+  const spinOptions = {
+    inputRange: [0, 1],
+    outputRange: ['180deg', '0deg'] // <-- any value larger than your content's height
   };
   const anim = useRef(new Animated.Value(0)).current;
   const [drawerState, setDrawerState] = useState('open');
@@ -67,7 +73,7 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
         style.container,
         {
           backgroundColor: colors.p1,
-          maxHeight: anim.interpolate(animOptions)
+          maxHeight: anim.interpolate(heightOptions)
         }
       ]}
     >
@@ -83,7 +89,15 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
         <Title size="large" color="white" style={style.title}>
           {title || 'No Events'}
         </Title>
-        <Icons name="chevron-down" color="white" size={ICON_SIZE.small} />
+        <Animated.View
+          style={[
+            {
+              transform: [{ rotate: anim.interpolate(spinOptions) }]
+            }
+          ]}
+        >
+          <Icons name="chevron-down" color="white" size={ICON_SIZE.small} />
+        </Animated.View>
       </TouchableOpacity>
       <ScrollView>
         {dailyEvents?.map((event) => (
