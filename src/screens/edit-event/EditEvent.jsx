@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -29,9 +29,12 @@ import {
 } from '../../firebase-api';
 import { padding } from '../../theme';
 import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from '../../data';
+import { AuthContext } from '../../context';
+import { handleUpdateEvent } from '../../utils';
 
 const CreateEvent = ({ navigation, route }) => {
   const { colors } = useTheme();
+  const { currentUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [event, setEvent] = useState(null);
 
@@ -81,6 +84,13 @@ const CreateEvent = ({ navigation, route }) => {
   };
 
   const saveEvent = async () => {
+    const dateTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes()
+    );
     const data = {
       description,
       title,
@@ -91,13 +101,7 @@ const CreateEvent = ({ navigation, route }) => {
       hats,
       frequency,
       isRecurring,
-      dateTime: new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        time.getHours(),
-        time.getMinutes()
-      )
+      dateTime
     };
     Object.keys(data).forEach((k) => data[k] == null && delete data[k]);
     setIsLoading(true);
@@ -119,6 +123,13 @@ const CreateEvent = ({ navigation, route }) => {
       setIsLoading(false);
       navigation.navigate('Event', { id: event.id });
     }
+    handleUpdateEvent(currentUser, {
+      id: event.id,
+      title,
+      dateTime,
+      description,
+      frequency
+    });
   };
 
   useEffect(() => {

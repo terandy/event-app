@@ -3,8 +3,8 @@ import * as Notifications from 'expo-notifications';
 import * as Calendar from 'expo-calendar';
 import React, { useEffect, useRef, createContext, useContext } from 'react';
 import { Platform } from 'react-native';
-import { apiSaveToken, addCalendarIdToUser } from '../firebase-api';
-import { getCalendarByName, createCalendar } from '../utils';
+import { apiSaveToken, addCalendarIdToUser, fetchEvent } from '../firebase-api';
+import { getCalendarByName, createCalendar, handleUpdateEvent } from '../utils';
 import { CALENDAR_NAME } from '../data';
 import { AuthContext } from './AuthContext';
 import * as RootNavigation from '../navigator/RootNavigator';
@@ -31,6 +31,17 @@ export function NotificationProvider({ children }) {
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
           // This listener is fired whenever a notification is received while the app is foregrounded
+          const eventId = notification.request.content.data.id;
+          fetchEvent(
+            { id: eventId },
+            (snapshot) => {
+              const event = snapshot.data();
+              if (event) {
+                handleUpdateEvent(currentUser, event);
+              }
+            },
+            (err) => console.log(err)
+          );
         });
 
       responseListener.current =

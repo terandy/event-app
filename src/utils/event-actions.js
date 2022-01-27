@@ -76,10 +76,10 @@ export const handleUpdateEvent = async (currentUser, event) => {
   const { calendarEventId } = currentUser.events.find(
     (event) => event.eventId === id
   );
-  const startDate = dateTime.toDate();
-  const endDate = new Date(
-    dateTime.toDate().setHours(startDate.getHours() + 1)
-  );
+  const startDate = dateTime.toDate ? dateTime.toDate() : new Date(dateTime);
+  const end = dateTime.toDate ? dateTime.toDate() : new Date(dateTime);
+  const endDate = new Date(end.setHours(end.getHours() + 1));
+
   const details = {
     title,
     startDate,
