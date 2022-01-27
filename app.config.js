@@ -19,7 +19,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.terandy.yspapp',
-      buildNumber: '1.5.2',
+      buildNumber: '1.5.3',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~5676793545'
       },
@@ -34,7 +34,7 @@ export default {
         backgroundColor: '#5F40F7'
       },
       package: 'com.terandy.yspapp',
-      versionCode: 52,
+      versionCode: 53,
       googleServicesFile: './google-services.json',
       config: {
         googleMobileAdsAppId: 'ca-app-pub-5055103069379901~3840967691'
@@ -49,6 +49,13 @@ export default {
         {
           userTrackingPermission:
             "We will update your device's Calendar with events you are interested in."
+        }
+      ],
+      [
+        'expo-ads-admob',
+        {
+          userTrackingPermission:
+            'This identifier will be used to deliver personalized ads to you.'
         }
       ]
     ],
