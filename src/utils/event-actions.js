@@ -1,5 +1,5 @@
 import * as Calendar from 'expo-calendar';
-
+import * as Localization from 'expo-localization';
 import {
   removeEventFromUsers,
   removeUserFromEvent,
@@ -24,7 +24,7 @@ const addEventToCalendar = async (currentUser, event) => {
     title,
     startDate,
     endDate,
-    timeZone: 'America/Toronto',
+    timeZone: Localization.timeZone,
     alarms: [
       {
         relativeOffset: 0
