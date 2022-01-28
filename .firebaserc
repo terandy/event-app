@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "ysp-app-294f8",
+    "production": "ysp-app-294f8"
+  },
+  "targets": {}
+}

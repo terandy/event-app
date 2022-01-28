@@ -35,7 +35,7 @@ function EventListScreen({ navigation }) {
         <Title size="large">Upcoming Events</Title>
         {upcomingEvents.map((event) => (
           <EventCard
-            key={event.id}
+            key={`home-${event.id}`}
             event={event}
             style={{ marginVertical: 8 }}
             onPress={() => handleEventPress(event.id)}

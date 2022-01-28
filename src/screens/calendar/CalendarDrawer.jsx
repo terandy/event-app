@@ -102,7 +102,7 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
       <ScrollView>
         {dailyEvents?.map((event) => (
           <EventDrawerCard
-            key={event.id}
+            key={`drawer-${event.id}`}
             event={event}
             onPress={handleEventPress}
           />

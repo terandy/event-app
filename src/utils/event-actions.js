@@ -8,11 +8,12 @@ import {
   getEvent
 } from '../firebase-api';
 const removeEventFromCalendar = async (currentUser, event) => {
-  const { calendarEventId } = currentUser.events.find(
-    (evt) => evt.eventId === event.id
-  );
-  Calendar.deleteEventAsync(calendarEventId, { futureEvents: true });
-  return calendarEventId;
+  const userEvent = currentUser.events.find((evt) => evt.eventId === event.id);
+  if (userEvent) {
+    const { calendarEventId } = userEvent;
+    Calendar.deleteEventAsync(calendarEventId, { futureEvents: true });
+    return calendarEventId;
+  }
 };
 
 const addEventToCalendar = async (currentUser, event) => {
