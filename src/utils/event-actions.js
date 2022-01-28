@@ -4,82 +4,21 @@ import {
   removeEventFromUsers,
   removeUserFromEvent,
   addEventToUser,
-  addUserToEvent
+  addUserToEvent,
+  getEvent
 } from '../firebase-api';
-
-export const handleInterestPress = async (currentUser, event, isInterested) => {
-  const { title, dateTime, frequency, id } = event;
-  if (isInterested) {
-    const { calendarEventId } = currentUser.events.find(
-      (event) => event.eventId === id
-    );
-    await Calendar.deleteEventAsync(calendarEventId);
-
-    removeEventFromUsers({ eventId: id, calendarEventId });
-    removeUserFromEvent({ eventId: id });
-  } else {
-    const startDate = dateTime.toDate();
-    const endDate = new Date(
-      dateTime.toDate().setHours(startDate.getHours() + 1)
-    );
-    const details = {
-      title,
-      startDate,
-      endDate,
-      timeZone: 'America/Toronto',
-      alarms: [
-        {
-          relativeOffset: 0
-        },
-        { relativeOffset: -currentUser.settings.reminderTime }
-      ],
-      recurrenceRule: {
-        frequency:
-          frequency && frequency !== ''
-            ? Calendar.Frequency[frequency]
-            : undefined
-      }
-    };
-    try {
-      const calendarEventId = await Calendar.createEventAsync(
-        currentUser.calendarId,
-        details
-      );
-      await addEventToUser({ eventId: id, calendarEventId });
-      await addUserToEvent({ eventId: id });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-};
-export const updateCalendarTimes = (currentUser, reminderTime) => {
-  const calendarEventIds = currentUser.events.map(
-    (event) => event.calendarEventId
-  );
-  const details = {
-    alarms: [
-      {
-        relativeOffset: 0
-      },
-      { relativeOffset: -reminderTime }
-    ]
-  };
-  try {
-    calendarEventIds.forEach((id) => Calendar.updateEventAsync(id, details));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const handleUpdateEvent = async (currentUser, event) => {
-  const { title, dateTime, frequency, id } = event;
+const removeEventFromCalendar = async (currentUser, event) => {
   const { calendarEventId } = currentUser.events.find(
-    (event) => event.eventId === id
+    (evt) => evt.eventId === event.id
   );
-  const startDate = dateTime.toDate ? dateTime.toDate() : new Date(dateTime);
-  const end = dateTime.toDate ? dateTime.toDate() : new Date(dateTime);
-  const endDate = new Date(end.setHours(end.getHours() + 1));
+  Calendar.deleteEventAsync(calendarEventId, { futureEvents: true });
+  return calendarEventId;
+};
 
+const addEventToCalendar = async (currentUser, event) => {
+  const { title, dateTime, frequency, id } = event;
+  const startDate = new Date(dateTime);
+  const endDate = new Date(dateTime.setHours(startDate.getHours() + 1));
   const details = {
     title,
     startDate,
@@ -92,14 +31,87 @@ export const handleUpdateEvent = async (currentUser, event) => {
       { relativeOffset: -currentUser.settings.reminderTime }
     ],
     recurrenceRule: {
-      frequency:
-        frequency && frequency !== ''
-          ? Calendar.Frequency[frequency]
-          : undefined
+      ...(frequency &&
+        frequency !== '' && { frequency: Calendar.Frequency[frequency] })
     }
   };
   try {
-    Calendar.updateEventAsync(calendarEventId, details);
+    const calendarEventId = await Calendar.createEventAsync(
+      currentUser.calendarId,
+      details
+    );
+    return calendarEventId;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const handleInterestPress = async (currentUser, event, isInterested) => {
+  if (isInterested) {
+    try {
+      const calendarEventId = await removeEventFromCalendar(currentUser, event);
+      removeEventFromUsers({ eventId: event.id, calendarEventId });
+      removeUserFromEvent({ eventId: event.id });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      const calendarEventId = await addEventToCalendar(currentUser, {
+        ...event,
+        dateTime: event.dateTime.toDate()
+      });
+      addEventToUser({ eventId: event.id, calendarEventId });
+      addUserToEvent({ eventId: event.id });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+export const updateCalendarTimes = (currentUser, reminderTime) => {
+  const calendarEventIds = currentUser.events.map(
+    (event) => event.calendarEventId
+  );
+  const alarms = [
+    {
+      relativeOffset: 0
+    },
+    { relativeOffset: -reminderTime }
+  ];
+  try {
+    calendarEventIds.forEach((id) => Calendar.updateEventAsync(id, { alarms }));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const handleUpdateEvent = async (currentUser, event) => {
+  try {
+    const oldCalEvtId = await removeEventFromCalendar(currentUser, event);
+    removeEventFromUsers({
+      eventId: event.id,
+      calendarEventId: oldCalEvtId
+    });
+    const newCalEvtId = await addEventToCalendar(currentUser, event);
+    addEventToUser({ eventId: event.id, calendarEventId: newCalEvtId });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const handleUpdateEventFromNotification = async ({
+  currentUser,
+  eventId
+}) => {
+  try {
+    const doc = await getEvent({ id: eventId });
+    if (doc.exists) {
+      const event = doc.data();
+      handleUpdateEvent(currentUser, {
+        ...event,
+        dateTime: event.dateTime.toDate()
+      });
+    }
   } catch (err) {
     console.log(err);
   }

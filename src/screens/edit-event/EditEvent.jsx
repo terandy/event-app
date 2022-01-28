@@ -123,13 +123,18 @@ const CreateEvent = ({ navigation, route }) => {
       setIsLoading(false);
       navigation.navigate('Event', { id: event.id });
     }
-    handleUpdateEvent(currentUser, {
-      id: event.id,
-      title,
-      dateTime,
-      description,
-      frequency
-    });
+    if (event.users?.includes(currentUser.id)) {
+      handleUpdateEvent(currentUser, {
+        id: event.id,
+        title,
+        dateTime: new Date(dateTime),
+        description,
+        frequency,
+        isRecurring,
+        users: event.users,
+        messages: event.messages
+      });
+    }
   };
 
   useEffect(() => {
@@ -373,7 +378,7 @@ const CreateEvent = ({ navigation, route }) => {
                 title="Non-Recurring"
                 onPress={() => {
                   setIsRecurring(false);
-                  setFrequency(null);
+                  setFrequency('');
                 }}
                 color={isRecurring ? colors.p3 : colors.p2}
                 style={{ marginRight: 24 }}

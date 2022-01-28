@@ -17,7 +17,7 @@ export const apiRegister = async ({ email, password, name }) =>
       name,
       email,
       settings: DEFAULT_USER_SETTINGS,
-      event: []
+      events: []
     })
   );
 export const apiResetPassword = async ({ email }) =>
@@ -43,6 +43,8 @@ export const fetchUser = async ({ userId }, callback, errorCallback) =>
 
 export const fetchEvent = async ({ id }, callback, errorCallback) =>
   db.collection('events').doc(id).onSnapshot(callback, errorCallback);
+
+export const getEvent = async ({ id }) => db.collection('events').doc(id).get();
 
 export const fetchOrganiser = async ({ creator }, callback, errorCallback) =>
   db.collection('users').doc(creator).onSnapshot(callback, errorCallback);

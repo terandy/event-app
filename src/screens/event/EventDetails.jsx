@@ -33,7 +33,7 @@ const Details = ({ event, blockUser }) => {
 
   return (
     <>
-      {description && (
+      {!!description && (
         <Text style={{ color: colors.g1, marginBottom: 20 }}>
           {description}
         </Text>
@@ -51,7 +51,7 @@ const Details = ({ event, blockUser }) => {
           );
         })}
       </View>
-      {event.location && (
+      {!!event.location && (
         <ExternalLink
           title={'View location'}
           onPress={() =>
@@ -62,7 +62,7 @@ const Details = ({ event, blockUser }) => {
           style={{ marginBottom: 12 }}
         />
       )}
-      {event.website && (
+      {!!event.website && (
         <ExternalLink
           title={event.website}
           onPress={() =>
@@ -73,7 +73,7 @@ const Details = ({ event, blockUser }) => {
           style={{ marginBottom: 12 }}
         />
       )}
-      {event.zoomLink && (
+      {!!event.zoomLink && (
         <ExternalLink
           title={'Meeting link'}
           onPress={() =>

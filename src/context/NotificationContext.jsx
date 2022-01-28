@@ -3,8 +3,12 @@ import * as Notifications from 'expo-notifications';
 import * as Calendar from 'expo-calendar';
 import React, { useEffect, useRef, createContext, useContext } from 'react';
 import { Platform } from 'react-native';
-import { apiSaveToken, addCalendarIdToUser, fetchEvent } from '../firebase-api';
-import { getCalendarByName, createCalendar, handleUpdateEvent } from '../utils';
+import { apiSaveToken, addCalendarIdToUser } from '../firebase-api';
+import {
+  getCalendarByName,
+  createCalendar,
+  handleUpdateEventFromNotification
+} from '../utils';
 import { CALENDAR_NAME } from '../data';
 import { AuthContext } from './AuthContext';
 import * as RootNavigation from '../navigator/RootNavigator';
@@ -32,16 +36,9 @@ export function NotificationProvider({ children }) {
         Notifications.addNotificationReceivedListener((notification) => {
           // This listener is fired whenever a notification is received while the app is foregrounded
           const eventId = notification.request.content.data.id;
-          fetchEvent(
-            { id: eventId },
-            (snapshot) => {
-              const event = snapshot.data();
-              if (event) {
-                handleUpdateEvent(currentUser, event);
-              }
-            },
-            (err) => console.log(err)
-          );
+          if (eventId) {
+            handleUpdateEventFromNotification({ currentUser, eventId });
+          }
         });
 
       responseListener.current =
@@ -49,6 +46,7 @@ export function NotificationProvider({ children }) {
           // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
           const eventId = response.notification.request.content.data.id;
           if (eventId) {
+            handleUpdateEventFromNotification({ currentUser, eventId });
             RootNavigation.navigate('Event', { id: eventId });
           }
         });
