@@ -74,7 +74,11 @@ const EventCard = ({ event, style, onPress }) => {
             - {displayTime}
           </Text>
         </View>
-        <Text style={{ color: colors.g1 }}>{description}</Text>
+        <Text style={{ color: colors.g1, maxHeight: 60 }}>
+          {!!description && description.length > 120
+            ? description.slice(0, 120) + '...'
+            : description}
+        </Text>
       </Pressable>
     </Card>
   );

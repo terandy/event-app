@@ -22,13 +22,20 @@ const EventDrawerCard = ({ event, onPress }) => {
           marginBottom: padding.xsmall
         }}
       >
-        <Title color="white">{event.title}</Title>
+        <Title color="white" style={{ marginRight: 16, flexShrink: 1 }}>
+          {event.title}
+        </Title>
         <Title size="small" color={colors.w1}>
           {time}
         </Title>
       </View>
-      <Title size="small" style={{ color: 'white', fontWeight: 'normal' }}>
-        {event.description}
+      <Title
+        size="small"
+        style={{ color: 'white', fontWeight: 'normal', maxHeight: 50 }}
+      >
+        {!!event.description && event.description.length > 120
+          ? event.description.slice(0, 120) + '...'
+          : event.description}
       </Title>
     </Pressable>
   );

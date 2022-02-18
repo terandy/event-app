@@ -55,49 +55,53 @@ const NotificationsSettings = () => {
         />
         <Text>{isEnabled ? 'On' : 'Off'}</Text>
       </View>
-      <View style={[styles.title]}>
-        <Title size="small" style={[styles.title]}>
-          Be notified for
-        </Title>
-        <View style={[styles.row, styles.space]}>
-          {CITIES.map((city) => (
-            <PillButton
-              key={city}
-              title={city}
-              isActive={cities?.includes(city)}
-              onPress={() => handleCityPress(city)}
-              color={colors.p1}
-              style={styles.gap}
+      {isEnabled && (
+        <>
+          <View style={[styles.title]}>
+            <Title size="small" style={[styles.title]}>
+              Be notified for
+            </Title>
+            <View style={[styles.row, styles.space]}>
+              {CITIES.map((city) => (
+                <PillButton
+                  key={city}
+                  title={city}
+                  isActive={cities?.includes(city)}
+                  onPress={() => handleCityPress(city)}
+                  color={colors.p1}
+                  style={styles.gap}
+                />
+              ))}
+            </View>
+            <View style={styles.row}>
+              {HATS.map((hat) => (
+                <PillButton
+                  key={hat}
+                  title={hat}
+                  isActive={hats?.includes(hat)}
+                  onPress={() => handleHatPress(hat)}
+                  color={colors[HAT_COLORS[hat]]}
+                  style={styles.gap}
+                />
+              ))}
+            </View>
+          </View>
+          <View>
+            <Title size="small" style={[styles.title]}>
+              Be notified
+            </Title>
+            <SelectInput
+              selectedValue={reminderTime}
+              onValueChange={(e) => handleReminderTimePress(e)}
+              options={REMINDER_TIMES}
+              style={styles.input}
             />
-          ))}
-        </View>
-        <View style={styles.row}>
-          {HATS.map((hat) => (
-            <PillButton
-              key={hat}
-              title={hat}
-              isActive={hats?.includes(hat)}
-              onPress={() => handleHatPress(hat)}
-              color={colors[HAT_COLORS[hat]]}
-              style={styles.gap}
-            />
-          ))}
-        </View>
-      </View>
-      <View>
-        <Title size="small" style={[styles.title]}>
-          Be notified
-        </Title>
-        <SelectInput
-          selectedValue={reminderTime}
-          onValueChange={(e) => handleReminderTimePress(e)}
-          options={REMINDER_TIMES}
-          style={styles.input}
-        />
-        <Title size="small" style={[styles.title]}>
-          before the event
-        </Title>
-      </View>
+            <Title size="small" style={[styles.title]}>
+              before the event
+            </Title>
+          </View>
+        </>
+      )}
     </View>
   );
 };
