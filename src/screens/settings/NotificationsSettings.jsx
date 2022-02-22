@@ -2,15 +2,16 @@ import { useContext } from 'react';
 import { View, Switch, StyleSheet, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-import { AuthContext } from '../../context';
+import { AuthContext, EventContext } from '../../context';
 import { Title, PillButton, SelectInput } from '../../elements';
 import { CITIES, HAT_COLORS, HATS, REMINDER_TIMES } from '../../data';
 import { padding } from '../../theme';
 import { apiUpdateSettings } from '../../firebase-api';
-import { updateCalendarTimes } from '../../utils';
+import { updateReminderTimes } from '../../utils';
 
 const NotificationsSettings = () => {
   const { currentUser } = useContext(AuthContext);
+  const { events } = useContext(EventContext);
   const { colors } = useTheme();
 
   const {
@@ -37,9 +38,11 @@ const NotificationsSettings = () => {
   };
   const handleReminderTimePress = (e) => {
     apiUpdateSettings({ reminderTime: e });
-    updateCalendarTimes(currentUser, e);
+    const newCurrentUser = currentUser;
+    newCurrentUser.settings.reminderTime = e;
+    updateReminderTimes(newCurrentUser, events);
   };
-  const toggleSwitch = (value) => {
+  const toggleSwitch = () => {
     apiUpdateSettings({ isEnabled: !isEnabled });
   };
   return (

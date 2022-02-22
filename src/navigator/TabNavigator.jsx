@@ -3,7 +3,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from 'react-native-paper';
 
 import { CalendarScreen, EventListScreen } from '../screens';
-import { EventProvider } from '../context';
 import { ICON_SIZE } from '../data';
 
 const Tab = createMaterialTopTabNavigator();
@@ -57,8 +56,4 @@ function TabNavigator() {
   );
 }
 
-export default () => (
-  <EventProvider>
-    <TabNavigator />
-  </EventProvider>
-);
+export default TabNavigator;

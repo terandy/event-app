@@ -4,7 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, useTheme } from 'react-native-paper';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
-import { NotificationProvider, AuthProvider, AuthContext } from './src/context';
+import {
+  NotificationProvider,
+  AuthProvider,
+  AuthContext,
+  EventProvider
+} from './src/context';
 import { MyNavigator, AuthNavigator, navigationRef } from './src/navigator';
 import { theme } from './src/theme';
 
@@ -55,11 +60,13 @@ function App() {
 export default () => (
   <AuthProvider>
     <NotificationProvider>
-      <NavigationContainer ref={navigationRef}>
-        <PaperProvider theme={theme}>
-          <App />
-        </PaperProvider>
-      </NavigationContainer>
+      <EventProvider>
+        <NavigationContainer ref={navigationRef}>
+          <PaperProvider theme={theme}>
+            <App />
+          </PaperProvider>
+        </NavigationContainer>
+      </EventProvider>
     </NotificationProvider>
   </AuthProvider>
 );

@@ -1,15 +1,8 @@
-import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import * as Calendar from 'expo-calendar';
 import React, { useEffect, useRef, createContext, useContext } from 'react';
 import { Platform } from 'react-native';
-import { apiSaveToken, addCalendarIdToUser } from '../firebase-api';
-import {
-  getCalendarByName,
-  createCalendar,
-  handleUpdateEventFromNotification
-} from '../utils';
-import { CALENDAR_NAME } from '../data';
+import { apiSaveToken } from '../firebase-api';
+import { handleUpdateEventFromNotification } from '../utils';
 import { AuthContext } from './AuthContext';
 import * as RootNavigation from '../navigator/RootNavigator';
 
@@ -36,8 +29,11 @@ export function NotificationProvider({ children }) {
         Notifications.addNotificationReceivedListener((notification) => {
           // This listener is fired whenever a notification is received while the app is foregrounded
           const eventId = notification.request.content.data.id;
+          const shouldUpdate =
+            notification.request.content.body.includes('update');
           if (eventId) {
-            handleUpdateEventFromNotification({ currentUser, eventId });
+            if (shouldUpdate)
+              handleUpdateEventFromNotification({ currentUser, eventId });
           }
         });
 
@@ -45,8 +41,11 @@ export function NotificationProvider({ children }) {
         Notifications.addNotificationResponseReceivedListener((response) => {
           // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
           const eventId = response.notification.request.content.data.id;
+          const shouldUpdate =
+            response.notification.request.content.body.includes('update');
           if (eventId) {
-            handleUpdateEventFromNotification({ currentUser, eventId });
+            if (shouldUpdate)
+              handleUpdateEventFromNotification({ currentUser, eventId });
             RootNavigation.navigate('Event', { id: eventId });
           }
         });
@@ -60,26 +59,6 @@ export function NotificationProvider({ children }) {
     }
   }, [currentUser]);
 
-  useEffect(() => {
-    if (currentUser) {
-      (async () => {
-        const { status } = await Calendar.requestCalendarPermissionsAsync();
-        if (status === 'granted') {
-          const calendar = await getCalendarByName(CALENDAR_NAME);
-          if (!calendar) {
-            const newCalendarId = await createCalendar();
-            addCalendarIdToUser(newCalendarId);
-          } else if (
-            !currentUser.calendarId ||
-            currentUser.calendarId !== calendar.id
-          ) {
-            addCalendarIdToUser(calendar.id);
-          }
-        }
-      })();
-    }
-  }, [currentUser]);
-
   return (
     <NotificationContext.Provider value={{}}>
       {children}
@@ -88,23 +67,17 @@ export function NotificationProvider({ children }) {
 }
 
 async function registerForPushNotificationsAsync() {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-  } else {
-    alert('Must use physical device for Push Notifications');
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
   }
+  if (finalStatus !== 'granted') {
+    alert('Failed to get push token for push notification!');
+    return;
+  }
+  const token = (await Notifications.getExpoPushTokenAsync()).data;
 
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {

@@ -146,19 +146,7 @@ export const apiSaveToken = (token) =>
     )
     .catch((err) => console.log(err));
 
-export const addCalendarIdToUser = (calendarId) =>
-  db
-    .collection('users')
-    .doc(auth.currentUser.uid)
-    .set(
-      {
-        calendarId: calendarId
-      },
-      { merge: true }
-    )
-    .catch((err) => console.log(err));
-
-export const removeEventFromUsers = ({ eventId, calendarEventId }) =>
+export const removeEventFromUsers = ({ eventId, reminderId, notificationId }) =>
   db
     .collection('users')
     .doc(auth.currentUser.uid)
@@ -166,14 +154,15 @@ export const removeEventFromUsers = ({ eventId, calendarEventId }) =>
       {
         events: firebase.firestore.FieldValue.arrayRemove({
           eventId,
-          calendarEventId
+          reminderId,
+          notificationId
         })
       },
       { merge: true }
     )
     .catch((err) => console.log(err));
 
-export const addEventToUser = ({ eventId, calendarEventId }) =>
+export const addEventToUser = ({ eventId, reminderId, notificationId }) =>
   db
     .collection('users')
     .doc(auth.currentUser.uid)
@@ -181,7 +170,8 @@ export const addEventToUser = ({ eventId, calendarEventId }) =>
       {
         events: firebase.firestore.FieldValue.arrayUnion({
           eventId,
-          calendarEventId
+          reminderId,
+          notificationId
         })
       },
       { merge: true }

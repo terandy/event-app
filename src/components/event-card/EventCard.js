@@ -64,14 +64,13 @@ const EventCard = ({ event, style, onPress }) => {
             />
           </View>
           <Text style={{ color: colors.p2, fontSize: 13 }}>
-            {!isRecurring
-              ? displayDate
-              : frequency == 'WEEKLY'
-              ? `Every ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]} `
-              : frequency == 'BI-WEEKLY'
-              ? `Bi-weekly on ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]}s `
-              : `${displayDate} - Recurring ${frequency} `}
-            - {displayTime}
+            {`${
+              isRecurring
+                ? frequency == 'WEEKLY'
+                  ? `Every ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]} `
+                  : `${frequency} - ${displayDate}`
+                : displayDate
+            } - ${displayTime}`}
           </Text>
         </View>
         <Text style={{ color: colors.g1, maxHeight: 60 }}>
