@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Linking,
   Pressable,
-  Platform,
   ScrollView
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { AdMobInterstitial } from 'expo-ads-admob';
 
-import { Title, ExternalLink, Layout } from '../../elements';
+import { Title, Layout } from '../../elements';
 import { PersonCard } from '../../components';
 import { padding } from '../../theme';
 
 const Info = ({ navigation }) => {
   const { colors } = useTheme();
-  const [error, setError] = useState(false);
   const people = [
     {
       displayName: 'Koshin Young',
@@ -50,28 +47,33 @@ const Info = ({ navigation }) => {
     }
   ];
 
-  const adUnitId =
-    Platform.os === 'ios'
-      ? 'ca-app-pub-5055103069379901/3144454389'
-      : 'ca-app-pub-5055103069379901/9354639511';
-  const showInterstitial = async () => {
-    try {
-      await AdMobInterstitial.setAdUnitID(adUnitId);
-      await AdMobInterstitial.requestAdAsync({
-        servePersonalizedAds: true
-      });
-      await AdMobInterstitial.showAdAsync();
-    } catch (err) {
-      setError(true);
-    }
-  };
-  const handleWatchAdd = () => {
-    showInterstitial();
-  };
+  const credits = [
+    {
+      roleDescription: 'Produced by',
+      name: 'François L.',
+    },
+    {
+      roleDescription: 'Designed by',
+      name: 'Kimberly G.',
+    },
+    {
+      roleDescription: 'Developed by',
+      name: 'Teresa L.',
+    },
+    {
+      roleDescription: 'Edited by',
+      name: 'Hyung Tae F.',
+    },
+  ];
+
+  const creditsRows = [];
+
+  for(let i=0;i<credits.length;i++)
+    creditsRows.push( buildCreditRow(i,credits[i].roleDescription,credits[i].name));
 
   return (
     <Layout>
-      <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
+      <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1, paddingBottom: padding.large*2.5}}>
         <Title size="large">About</Title>
         <Text>
           The app's purpose is to provide younger generations within the
@@ -100,32 +102,6 @@ const Info = ({ navigation }) => {
             reason YSP is amazing. Truly lots of credit goes to you, thank you!
           </Text>
         </View>
-        <Title size="large" style={{ marginTop: 88 }}>
-          Support YSP
-        </Title>
-        <ExternalLink
-          title={'Donate here'}
-          onPress={() =>
-            Linking.openURL('https://www.yspcanada.org/donate').catch((err) =>
-              console.log(err)
-            )
-          }
-          size="small"
-          style={{ marginBottom: 12 }}
-        />
-        <ExternalLink
-          title={'Watch an ad'}
-          onPress={handleWatchAdd}
-          size="small"
-          style={{ marginBottom: 12 }}
-        />
-        {error && (
-          <Text
-            style={{ textAlign: 'center', marginBottom: 12, color: colors.p1 }}
-          >
-            No ads currently
-          </Text>
-        )}
 
         <Text style={{ textAlign: 'center', marginTop: 88 }}>
           Contact us via
@@ -176,18 +152,16 @@ const Info = ({ navigation }) => {
             End-User License Agreement
           </Text>
         </Pressable>
-        <Text style={{ textAlign: 'center', marginBottom: 12 }}>
-          Produced by: Francois L.
-        </Text>
-        <Text style={{ textAlign: 'center', marginBottom: 12 }}>
-          Designed by: Kimberly G.
-        </Text>
-        <Text style={{ textAlign: 'center', marginBottom: 100 }}>
-          Developed by: Teresa L.
-        </Text>
+        {creditsRows}
       </ScrollView>
     </Layout>
   );
 };
+
+function buildCreditRow(key, roleDescription, name){
+  return <Text key={key} style={{ textAlign: 'center', marginBottom: 12 }}>
+  {roleDescription}: {name}
+  </Text>;
+}
 
 export default Info;

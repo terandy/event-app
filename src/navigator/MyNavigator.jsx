@@ -6,7 +6,8 @@ import {
   DeleteEventScreen,
   CreateEventScreen,
   Eula,
-  BlockUserScreen
+  BlockUserScreen,
+  DonateScreen,
 } from '../screens';
 import TabNavigator from './TabNavigator';
 import { createMyNavigator } from './createMyNavigator';
@@ -60,6 +61,11 @@ function MyNavigator() {
         name="Block User"
         component={BlockUserScreen}
         options={{ title: 'Block User', hide: true }}
+      />
+      <My.Screen
+        name="Donate"
+        component={DonateScreen}
+        options={{ title: 'Donate' }}
       />
     </My.Navigator>
   );
