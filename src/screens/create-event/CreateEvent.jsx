@@ -1,14 +1,17 @@
-import React, { useState, useContext } from 'react';
+// TODO: Form validation (npm install 'react-native-form-validator' --save)
+
+import React, { useState, useContext } from "react";
 import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   View,
-  Image
-} from 'react-native';
-import { useTheme } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
+  Image,
+} from "react-native";
+import { useTheme } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
 
+import { RS } from "../../strings";
 import {
   Title,
   Loading,
@@ -19,36 +22,37 @@ import {
   TabButton,
   SelectInput,
   IconButton,
-  DateTimeInput
-} from '../../elements';
-import { apiCreateEvent } from '../../firebase-api';
-import { padding } from '../../theme';
-import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from '../../data';
-import { AuthContext } from '../../context';
+  DateTimeInput,
+} from "../../elements";
+import { apiCreateEvent } from "../../firebase-api";
+import { padding } from "../../theme";
+import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from "../../data";
+import { AuthContext } from "../../context";
 
 const CreateEvent = ({ navigation }) => {
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
-  const [date, setDate] = useState(new Date(Date.now()));
+  const [startDateTime, setStartDateTime] = useState(new Date(Date.now()));
+  const [endDateTime, setEndDateTime] = useState(new Date(Date.now()));
   const [description, setDescription] = useState();
   const [title, setTitle] = useState();
   const [location, setLocation] = useState();
   const [website, setWebsite] = useState();
   const [zoomLink, setZoomLink] = useState();
-  const [time, setTime] = useState(new Date(Date.now()));
   const [cities, setCities] = useState([CITIES[0]]);
   const [hats, setHats] = useState([HATS[0]]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [frequency, setFrequency] = useState('');
+  const [isMultiday, setIsMultiday] = useState(false);
+  const [frequency, setFrequency] = useState("");
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      quality: 1
+      quality: 1,
     });
 
     if (!result.cancelled) {
@@ -83,13 +87,15 @@ const CreateEvent = ({ navigation }) => {
       frequency,
       creator: currentUser.id,
       isRecurring,
-      dateTime: new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        time.getHours(),
-        time.getMinutes()
-      )
+      isMultiday,
+      startDateTime,
+      // Saving startDateTime also as "dateTime" while there are
+      // people using an old version of the app.
+      dateTime: startDateTime,
+      // Add endDateTime to the object only if multiple days is enabled.
+      ...(isMultiday && {
+        endDateTime: endDateTime,
+      }),
     };
     Object.keys(data).forEach((k) => data[k] == null && delete data[k]);
     setIsLoading(true);
@@ -98,8 +104,8 @@ const CreateEvent = ({ navigation }) => {
       image,
       callback: () => {
         setIsLoading(false);
-        navigation.navigate('Home');
-      }
+        navigation.navigate(RS.home);
+      },
     });
   };
 
@@ -107,12 +113,98 @@ const CreateEvent = ({ navigation }) => {
     return <Loading />;
   }
 
+  const renderEndDateColumn = () => (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "column",
+      }}
+    >
+      <Title
+        size="medium"
+        color={colors.g1}
+        style={{ marginLeft: 12, marginRight: 24 }}
+      >
+        To
+      </Title>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <Title
+          size="small"
+          color={colors.g1}
+          style={{ marginLeft: 12, marginRight: 24 }}
+        >
+          Date
+        </Title>
+        <DateTimeInput
+          setValue={(value) =>
+            setEndDateTime(
+              new Date(
+                value.getFullYear(),
+                value.getMonth(),
+                value.getDate(),
+                endDateTime.getHours(),
+                endDateTime.getMinutes()
+              )
+            )
+          }
+          value={endDateTime}
+          mode="date"
+          style={{ flex: 1 }}
+        />
+        {!isMultiday && (
+          <PillButton
+            title="Multiday"
+            onPress={() => setIsMultiday(true)}
+            style={{ marginRight: 24 }}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <Title
+          size="small"
+          color={colors.g1}
+          style={{ marginLeft: 12, marginRight: 24 }}
+        >
+          Time
+        </Title>
+        <DateTimeInput
+          setValue={(value) =>
+            setEndDateTime(
+              new Date(
+                endDateTime.getFullYear(),
+                endDateTime.getMonth(),
+                endDateTime.getDate(),
+                value.getHours(),
+                value.getMinutes()
+              )
+            )
+          }
+          value={endDateTime}
+          mode="time"
+          style={{ flex: 1 }}
+        />
+      </View>
+    </View>
+  );
+
   return (
     <Layout>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
-          flex: 1
+          flex: 1,
         }}
       >
         <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
@@ -130,54 +222,116 @@ const CreateEvent = ({ navigation }) => {
               value={title}
               style={{ marginBottom: 24 }}
             />
+            {isMultiday && (
+              <PillButton
+                title="Single Day Event"
+                onPress={() => setIsMultiday(false)}
+                style={{ marginBottom: 12, width: 150 }}
+              />
+            )}
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 12
+                flexDirection: "row",
               }}
             >
-              <Title
-                size="small"
-                color={colors.g1}
-                style={{ marginLeft: 12, marginRight: 24 }}
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "column",
+                }}
               >
-                Date
-              </Title>
-              <DateTimeInput
-                setValue={setDate}
-                value={date}
-                mode="date"
-                style={{ flex: 1 }}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 12
-              }}
-            >
-              <Title
-                size="small"
-                color={colors.g1}
-                style={{ marginLeft: 12, marginRight: 24 }}
-              >
-                Time
-              </Title>
-              <DateTimeInput
-                setValue={setTime}
-                value={time}
-                mode="time"
-                style={{ flex: 1 }}
-              />
+                {isMultiday && (
+                  <Title
+                    size="medium"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    From
+                  </Title>
+                )}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <Title
+                    size="small"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    Date
+                  </Title>
+                  <DateTimeInput
+                    setValue={(value) =>
+                      setStartDateTime(
+                        new Date(
+                          value.getFullYear(),
+                          value.getMonth(),
+                          value.getDate(),
+                          startDateTime.getHours(),
+                          startDateTime.getMinutes()
+                        )
+                      )
+                    }
+                    value={startDateTime}
+                    mode="date"
+                    style={{ flex: 1 }}
+                  />
+                  {!isMultiday && (
+                    <PillButton
+                      title="Multiple Days"
+                      onPress={() => {
+                        setIsMultiday(true);
+                        let endDateTime = new Date(startDateTime);
+                        endDateTime.setDate(startDateTime.getDate() + 1);
+                        setEndDateTime(endDateTime);
+                      }}
+                      style={{ marginRight: 24 }}
+                    />
+                  )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <Title
+                    size="small"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    Time
+                  </Title>
+                  <DateTimeInput
+                    setValue={(value) =>
+                      setStartDateTime(
+                        new Date(
+                          startDateTime.getFullYear(),
+                          startDateTime.getMonth(),
+                          startDateTime.getDate(),
+                          value.getHours(),
+                          value.getMinutes()
+                        )
+                      )
+                    }
+                    value={startDateTime}
+                    mode="time"
+                    style={{ flex: 1 }}
+                  />
+                </View>
+              </View>
+              {isMultiday && renderEndDateColumn()}
             </View>
             <Title
               style={{
                 marginLeft: 12,
                 marginBottom: 6,
                 marginTop: 16,
-                color: colors.g1
+                color: colors.g1,
               }}
               size="small"
             >
@@ -201,27 +355,27 @@ const CreateEvent = ({ navigation }) => {
               placeholder="paste location url"
               onChangeText={(e) => setLocation(e)}
               value={location}
-              rightIcon={'map-marker'}
+              rightIcon={"map-marker"}
               style={{
-                marginBottom: 12
+                marginBottom: 12,
               }}
             />
             <TextInput
               placeholder="paste website url"
               onChangeText={(e) => setWebsite(e)}
               value={website}
-              rightIcon={'web'}
+              rightIcon={"web"}
               style={{
-                marginBottom: 12
+                marginBottom: 12,
               }}
             />
             <TextInput
               placeholder="paste online meeting link"
               onChangeText={(e) => setZoomLink(e)}
               value={zoomLink}
-              rightIcon={'link'}
+              rightIcon={"link"}
               style={{
-                marginBottom: 32
+                marginBottom: 32,
               }}
             />
             <Title
@@ -233,10 +387,10 @@ const CreateEvent = ({ navigation }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
+                flexDirection: "row",
+                alignItems: "center",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               {CITIES.map((tab) => (
@@ -258,10 +412,10 @@ const CreateEvent = ({ navigation }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               {HATS.map((hat) => (
@@ -284,9 +438,9 @@ const CreateEvent = ({ navigation }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               <PillButton
@@ -315,7 +469,7 @@ const CreateEvent = ({ navigation }) => {
                   onValueChange={(e) => {
                     setFrequency(e);
                   }}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   options={FREQUENCY_OPTIONS}
                 />
               </View>
@@ -323,12 +477,12 @@ const CreateEvent = ({ navigation }) => {
             <View
               style={{
                 borderWidth: 2,
-                flexDirection: 'row',
+                flexDirection: "row",
                 padding: 12,
                 borderRadius: 7,
-                borderStyle: 'dashed',
+                borderStyle: "dashed",
                 borderColor: colors.p3,
-                marginBottom: 24
+                marginBottom: 24,
               }}
             >
               {image && (
@@ -336,17 +490,17 @@ const CreateEvent = ({ navigation }) => {
                   source={{ uri: image }}
                   style={{
                     height: 100,
-                    width: 100
+                    width: 100,
                   }}
                 />
               )}
               <IconButton
                 size="small"
                 icon="upload"
-                title={image ? 'Change Image' : 'Add Image'}
+                title={image ? "Change Image" : "Add Image"}
                 onPress={pickImage}
                 color={colors.p1}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
               />
             </View>
             <Button
@@ -355,19 +509,19 @@ const CreateEvent = ({ navigation }) => {
               size="small"
               style={{
                 backgroundColor: colors.t1,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             />
             <Button
               title="Cancel"
-              onPress={() => navigation.navigate('Home')}
+              onPress={() => navigation.navigate(RS.home)}
               size="small"
               color={colors.t1}
               style={{
                 borderColor: colors.t1,
                 borderWidth: 2,
                 backgroundColor: colors.w1,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             />
           </View>

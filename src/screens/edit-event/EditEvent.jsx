@@ -1,13 +1,16 @@
-import React, { useContext, useState, useEffect } from 'react';
+// TODO: Update the date and time to startDateTime and endDateTime
+// TODO: Form validation (npm install 'react-native-form-validator' --save)
+
+import React, { useContext, useState, useEffect } from "react";
 import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   View,
-  Image
-} from 'react-native';
-import { useTheme } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
+  Image,
+} from "react-native";
+import { useTheme } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   Title,
@@ -19,18 +22,19 @@ import {
   TabButton,
   SelectInput,
   IconButton,
-  DateTimeInput
-} from '../../elements';
+  DateTimeInput,
+} from "../../elements";
 import {
   apiUploadImage,
   apiUpdateEvent,
   fetchEvent,
-  apiDeleteImage
-} from '../../firebase-api';
-import { padding } from '../../theme';
-import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from '../../data';
-import { AuthContext } from '../../context';
-import { handleUpdateEvent } from '../../utils';
+  apiDeleteImage,
+} from "../../firebase-api";
+import { padding } from "../../theme";
+import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from "../../data";
+import { AuthContext } from "../../context";
+import { handleUpdateEvent } from "../../utils";
+import { RS } from "../../strings";
 
 const CreateEvent = ({ navigation, route }) => {
   const { colors } = useTheme();
@@ -48,9 +52,9 @@ const CreateEvent = ({ navigation, route }) => {
   const [zoomLink, setZoomLink] = useState();
   const [time, setTime] = useState(new Date(Date.now()));
   const [cities, setCities] = useState([CITIES[0]]);
-  const [hats, setHats] = useState(['YSP']);
+  const [hats, setHats] = useState(["YSP"]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [frequency, setFrequency] = useState('');
+  const [frequency, setFrequency] = useState("");
   const [image, setImage] = useState();
   const [hasImageChanged, setHasImageChanged] = useState(false);
 
@@ -59,7 +63,7 @@ const CreateEvent = ({ navigation, route }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1
+      quality: 1,
     });
 
     if (!result.cancelled) {
@@ -101,7 +105,7 @@ const CreateEvent = ({ navigation, route }) => {
       hats,
       frequency,
       isRecurring,
-      dateTime
+      dateTime,
     };
     Object.keys(data).forEach((k) => data[k] == null && delete data[k]);
     setIsLoading(true);
@@ -116,12 +120,12 @@ const CreateEvent = ({ navigation, route }) => {
         image,
         callback: () => {
           setIsLoading(false);
-          navigation.navigate('Event', { id: event.id });
-        }
+          navigation.navigate(RS.event, { id: event.id });
+        },
       });
     } else {
       setIsLoading(false);
-      navigation.navigate('Event', { id: event.id });
+      navigation.navigate(RS.event, { id: event.id });
     }
     if (event.users?.includes(currentUser.id)) {
       handleUpdateEvent(currentUser, {
@@ -132,7 +136,7 @@ const CreateEvent = ({ navigation, route }) => {
         frequency,
         isRecurring,
         users: event.users,
-        messages: event.messages
+        messages: event.messages,
       });
     }
   };
@@ -186,9 +190,9 @@ const CreateEvent = ({ navigation, route }) => {
   return (
     <Layout>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
-          flex: 1
+          flex: 1,
         }}
       >
         <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
@@ -208,9 +212,9 @@ const CreateEvent = ({ navigation, route }) => {
             />
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 12
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 12,
               }}
             >
               <Title
@@ -229,9 +233,9 @@ const CreateEvent = ({ navigation, route }) => {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 12
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 12,
               }}
             >
               <Title
@@ -253,7 +257,7 @@ const CreateEvent = ({ navigation, route }) => {
                 marginLeft: 12,
                 marginBottom: 6,
                 marginTop: 16,
-                color: colors.g1
+                color: colors.g1,
               }}
               size="small"
             >
@@ -277,27 +281,27 @@ const CreateEvent = ({ navigation, route }) => {
               placeholder="paste location url"
               onChangeText={(e) => setLocation(e)}
               value={location}
-              rightIcon={'map-marker'}
+              rightIcon={"map-marker"}
               style={{
-                marginBottom: 12
+                marginBottom: 12,
               }}
             />
             <TextInput
               placeholder="paste website url"
               onChangeText={(e) => setWebsite(e)}
               value={website}
-              rightIcon={'web'}
+              rightIcon={"web"}
               style={{
-                marginBottom: 12
+                marginBottom: 12,
               }}
             />
             <TextInput
               placeholder="paste online meeting link"
               onChangeText={(e) => setZoomLink(e)}
               value={zoomLink}
-              rightIcon={'link'}
+              rightIcon={"link"}
               style={{
-                marginBottom: 32
+                marginBottom: 32,
               }}
             />
             <Title
@@ -309,10 +313,10 @@ const CreateEvent = ({ navigation, route }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
+                flexDirection: "row",
+                alignItems: "center",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               {CITIES.map((tab) => (
@@ -334,10 +338,10 @@ const CreateEvent = ({ navigation, route }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               {HATS.map((hat) => (
@@ -360,9 +364,9 @@ const CreateEvent = ({ navigation, route }) => {
             </Title>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 marginBottom: 24,
-                marginLeft: 12
+                marginLeft: 12,
               }}
             >
               <PillButton
@@ -378,7 +382,7 @@ const CreateEvent = ({ navigation, route }) => {
                 title="Non-Recurring"
                 onPress={() => {
                   setIsRecurring(false);
-                  setFrequency('');
+                  setFrequency("");
                 }}
                 color={isRecurring ? colors.p3 : colors.p2}
                 style={{ marginRight: 24 }}
@@ -391,7 +395,7 @@ const CreateEvent = ({ navigation, route }) => {
                   onValueChange={(e) => {
                     setFrequency(e);
                   }}
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   options={FREQUENCY_OPTIONS}
                 />
               </View>
@@ -399,12 +403,12 @@ const CreateEvent = ({ navigation, route }) => {
             <View
               style={{
                 borderWidth: 2,
-                flexDirection: 'row',
+                flexDirection: "row",
                 padding: 12,
                 borderRadius: 7,
-                borderStyle: 'dashed',
+                borderStyle: "dashed",
                 borderColor: colors.p3,
-                marginBottom: 24
+                marginBottom: 24,
               }}
             >
               {image && (
@@ -412,17 +416,17 @@ const CreateEvent = ({ navigation, route }) => {
                   source={{ uri: image }}
                   style={{
                     height: 100,
-                    width: 100
+                    width: 100,
                   }}
                 />
               )}
               <IconButton
                 size="small"
                 icon="upload"
-                title={image ? 'Change Image' : 'Add Image'}
+                title={image ? "Change Image" : "Add Image"}
                 onPress={pickImage}
                 color={colors.p1}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
               />
             </View>
             <Button
@@ -431,32 +435,32 @@ const CreateEvent = ({ navigation, route }) => {
               size="small"
               style={{
                 backgroundColor: colors.t1,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             />
             <Button
               title="Cancel"
-              onPress={() => navigation.navigate('Event', { id: event.id })}
+              onPress={() => navigation.navigate(RS.event, { id: event.id })}
               size="small"
               color={colors.t1}
               style={{
                 borderColor: colors.t1,
                 borderWidth: 2,
                 backgroundColor: colors.w1,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             />
-            <Title style={{ textAlign: 'center', marginBottom: 12 }}>OR</Title>
+            <Title style={{ textAlign: "center", marginBottom: 12 }}>OR</Title>
             <Button
               title="Delete"
               onPress={() =>
-                navigation.navigate('Delete Event', { id: event.id })
+                navigation.navigate(RS.deleteEvent, { id: event.id })
               }
               size="small"
               color={colors.r1}
               style={{
                 backgroundColor: colors.w1,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             />
           </View>

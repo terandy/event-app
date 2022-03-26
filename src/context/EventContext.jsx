@@ -1,6 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { fetchEvents } from '../firebase-api';
-import { isSame } from '../utils';
+import React, { createContext, useState, useEffect } from "react";
+import { fetchEvents } from "../firebase-api";
 
 export const EventContext = createContext();
 
@@ -13,7 +12,11 @@ export const EventProvider = ({ children }) => {
       unsubscribe = await fetchEvents(
         (snapshot) => {
           if (snapshot.size) {
-            let events = snapshot.docs.map((doc) => doc.data());
+            let events = snapshot.docs.map((doc) => {
+              const data = doc.data();
+              data.id = doc.id;
+              return data;
+            });
             setEvents(events);
           }
         },

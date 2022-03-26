@@ -1,51 +1,53 @@
-import * as Notifications from 'expo-notifications';
-import { Platform } from 'react-native';
+// TODO: Update the date and time to startDateTime and endDateTime
+
+import * as Notifications from "expo-notifications";
+import { Platform } from "react-native";
 import {
   removeEventFromUsers,
   removeUserFromEvent,
   addEventToUser,
   addUserToEvent,
-  getEvent
-} from '../firebase-api';
+  getEvent,
+} from "../firebase-api";
 
 export const getTrigger = ({ time, frequency, isRecurring }) => {
-  console.log('getTrigger', time, frequency);
+  console.log("getTrigger", time, frequency);
   let trigger;
   if (isRecurring) {
     switch (frequency) {
-      case 'DAILY':
+      case "DAILY":
         trigger = {
           repeats: true,
           hour: time.getHours(),
-          minute: time.getMinutes()
+          minute: time.getMinutes(),
         };
         break;
-      case 'WEEKLY':
+      case "WEEKLY":
         trigger = {
           repeats: true,
           weekday: time.getDay() + 1,
           hour: time.getHours(),
-          minute: time.getMinutes()
+          minute: time.getMinutes(),
         };
         break;
-      case 'MONTHLY':
+      case "MONTHLY":
         trigger =
-          Platform.OS === 'ios'
+          Platform.OS === "ios"
             ? {
                 repeats: true,
                 day: time.getDate(),
                 hour: time.getHours(),
-                minute: time.getMinutes()
+                minute: time.getMinutes(),
               }
             : time;
         break;
-      case 'YEARLY':
+      case "YEARLY":
         trigger = {
           repeats: true,
           month: time.getMonth() + 1,
           day: time.getDate(),
           hour: time.getHours(),
-          minute: time.getMinutes()
+          minute: time.getMinutes(),
         };
         break;
       default:
@@ -54,14 +56,14 @@ export const getTrigger = ({ time, frequency, isRecurring }) => {
     }
   } else {
     trigger =
-      Platform.OS === 'ios'
+      Platform.OS === "ios"
         ? {
             repeats: false,
             year: time.getFullYear(),
             month: time.getMonth() + 1,
             day: time.getDate(),
             hour: time.getHours(),
-            minute: time.getMinutes()
+            minute: time.getMinutes(),
           }
         : time;
   }
@@ -81,9 +83,9 @@ export const scheduleReminderNotification = async (
     content: {
       title,
       body: `Starting in ${rt} minutes`,
-      data: { id }
+      data: { id },
     },
-    trigger
+    trigger,
   });
   console.log({ reminderId });
   return { reminderId };
@@ -94,17 +96,17 @@ export const scheduleEventNotification = async ({
   id,
   dateTime,
   frequency,
-  isRecurring
+  isRecurring,
 }) => {
   startTime = dateTime.toDate ? dateTime.toDate() : dateTime;
   const trigger = getTrigger({ time: startTime, frequency, isRecurring });
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
       title,
-      body: 'Starting now!',
-      data: { id }
+      body: "Starting now!",
+      data: { id },
     },
-    trigger
+    trigger,
   });
   return { notificationId };
 };
@@ -127,7 +129,7 @@ export const getAllScheduledNotification = async () => {
       time: `${new Date(not.trigger.value).getHours()}:${new Date(
         not.trigger.value
       ).getMinutes()}`,
-      frequency: not.trigger
+      frequency: not.trigger,
     }))
   );
 };
@@ -149,7 +151,7 @@ export const showInterest = async ({ event, currentUser }) => {
     addEventToUser({
       eventId: event.id,
       reminderId,
-      notificationId
+      notificationId,
     });
     addUserToEvent({ eventId: event.id });
   } catch (err) {
@@ -191,7 +193,7 @@ export const updateReminderTimes = async (currentUser, events) => {
       removeEventFromUsers({
         eventId,
         reminderId: oldReminderId,
-        notificationId
+        notificationId,
       });
       addEventToUser({ eventId, reminderId, notificationId });
     }
@@ -205,7 +207,7 @@ export const handleUpdateEvent = async (currentUser, event) => {
 
 export const handleUpdateEventFromNotification = async ({
   currentUser,
-  eventId
+  eventId,
 }) => {
   try {
     const doc = await getEvent({ id: eventId });

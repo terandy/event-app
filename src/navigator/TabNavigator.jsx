@@ -1,9 +1,10 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from 'react-native-paper';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "react-native-paper";
 
-import { CalendarScreen, EventListScreen } from '../screens';
-import { ICON_SIZE } from '../data';
+import { CalendarScreen, EventListScreen } from "../screens";
+import { ICON_SIZE } from "../data";
+import { RS } from "../strings";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -11,7 +12,7 @@ function TabNavigator() {
   const { colors } = useTheme();
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={RS.home}
       labeled={false}
       tabBarPosition="bottom"
       screenOptions={{
@@ -21,8 +22,8 @@ function TabNavigator() {
         tabBarShowLabel: false,
         tabBarIconStyle: {
           height: ICON_SIZE.medium,
-          width: ICON_SIZE.medium
-        }
+          width: ICON_SIZE.medium,
+        },
       }}
       sceneContainerStyle={{ backgroundColor: colors.w1 }}
     >
@@ -36,7 +37,7 @@ function TabNavigator() {
               color={color}
               size={ICON_SIZE.small}
             />
-          )
+          ),
         }}
       />
       <Tab.Screen
@@ -49,7 +50,7 @@ function TabNavigator() {
               color={color}
               size={ICON_SIZE.small}
             />
-          )
+          ),
         }}
       />
     </Tab.Navigator>

@@ -1,6 +1,7 @@
-import { auth, db } from '../firebase';
-import { DEFAULT_USER_SETTINGS } from './data';
-import * as firebase from 'firebase';
+import { auth, db } from "../firebase";
+import { DEFAULT_USER_SETTINGS } from "./data";
+import * as firebase from "firebase";
+import { DS } from "./strings";
 
 export const fetchAuthStateChanged = (callback) =>
   auth.onAuthStateChanged(callback);
@@ -12,12 +13,12 @@ export const apiLogin = async ({ email, password }) =>
 
 export const apiRegister = async ({ email, password, name }) =>
   auth.createUserWithEmailAndPassword(email, password).then(() =>
-    db.collection('users').doc(auth.currentUser.uid).set({
+    db.collection(DS.users).doc(auth.currentUser.uid).set({
       id: auth.currentUser.uid,
       name,
       email,
       settings: DEFAULT_USER_SETTINGS,
-      events: []
+      events: [],
     })
   );
 export const apiResetPassword = async ({ email }) =>
@@ -25,55 +26,56 @@ export const apiResetPassword = async ({ email }) =>
 
 export const fetchEvents = async (callback, errorCallback) =>
   db
-    .collection('events')
-    .orderBy('dateTime', 'asc')
+    .collection(DS.events)
+    // .orderBy(DS.startDateTime, "asc")
     .onSnapshot(callback, errorCallback);
 
 export const fetchUsers = async (callback, errorCallback) =>
-  db.collection('users').onSnapshot(callback, errorCallback);
+  db.collection(DS.users).onSnapshot(callback, errorCallback);
 
 export const fetchCurrentUser = async (callback, errorCallback) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .onSnapshot(callback, errorCallback);
 
 export const fetchUser = async ({ userId }, callback, errorCallback) =>
-  db.collection('users').doc(userId).onSnapshot(callback, errorCallback);
+  db.collection(DS.users).doc(userId).onSnapshot(callback, errorCallback);
 
 export const fetchEvent = async ({ id }, callback, errorCallback) =>
-  db.collection('events').doc(id).onSnapshot(callback, errorCallback);
+  db.collection(DS.events).doc(id).onSnapshot(callback, errorCallback);
 
-export const getEvent = async ({ id }) => db.collection('events').doc(id).get();
+export const getEvent = async ({ id }) =>
+  db.collection(DS.events).doc(id).get();
 
 export const fetchOrganiser = async ({ creator }, callback, errorCallback) =>
-  db.collection('users').doc(creator).onSnapshot(callback, errorCallback);
+  db.collection(DS.users).doc(creator).onSnapshot(callback, errorCallback);
 
 export const apiSetMessages = async ({ id, newComment, messages }) => {
   return db
-    .collection('events')
+    .collection(DS.events)
     .doc(id)
     .update(
       {
-        messages: messages ? messages.concat(newComment) : [newComment]
+        messages: messages ? messages.concat(newComment) : [newComment],
       },
       { merge: true }
     );
 };
 
 export const apiDeleteEvent = async ({ id }) =>
-  db.collection('events').doc(id).delete();
+  db.collection(DS.events).doc(id).delete();
 
 export const apiUpdateEvent = async ({ id, data }) =>
-  db.collection('events').doc(id).set(data, { merge: true });
+  db.collection(DS.events).doc(id).set(data, { merge: true });
 
 const savePostData = (downloadURL, eventId, callback) => {
-  db.collection('events')
+  db.collection(DS.events)
     .doc(eventId)
     .set(
       {
         imageUrl: downloadURL,
-        creation: firebase.firestore.FieldValue.serverTimestamp()
+        creation: firebase.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }
     )
@@ -95,7 +97,11 @@ export const apiUploadImage = async ({ eventId, image, callback }) => {
   const response = await fetch(image);
   const blob = await response.blob();
 
-  const task = firebase.storage().ref().child(`images/${eventId}`).put(blob);
+  const task = firebase
+    .storage()
+    .ref()
+    .child(`${DS.images}/${eventId}`)
+    .put(blob);
   const taskProgress = () => {
     console.log(`transferred:${task.snapshot.bytesTransferred}`);
   };
@@ -113,34 +119,46 @@ export const apiUploadImage = async ({ eventId, image, callback }) => {
   const taskError = () => {
     console.log(task.snapshot.error);
   };
-  task.on('state_changed', taskProgress, taskError, taskCompleted);
+  task.on("state_changed", taskProgress, taskError, taskCompleted);
 };
 
-export const apiCreateEvent = async ({ data, image, callback }) =>
-  db
-    .collection('events')
-    .add(data)
-    .then((res) => {
-      // add id to doc
-      db.collection('events').doc(res.id).set({ id: res.id }, { merge: true });
-      if (image) {
-        apiUploadImage({ eventId: res.id, image, callback });
-      } else {
-        callback();
-      }
-    })
-    .catch((err) => {
-      console.log(err);
+// TODO: Make all in a transaction to be safer.
+export const apiCreateEvent = async ({ data, image, callback }) => {
+  try {
+    const res = await db.collection(DS.events).add(data);
+
+    // TODO: Remove this step after everyone has the updated version.
+    // The document snapshot already has the id property. No needs to save id
+    // inside the document data. We take the id when fetching the data.
+    // add id to doc
+    await db
+      .collection(DS.events)
+      .doc(res.id)
+      .set({ id: res.id }, { merge: true });
+
+    if (image) {
+      await apiUploadImage({ eventId: res.id, image, callback }).catch(
+        (err) => {
+          console.log(err);
+          callback();
+        }
+      );
+    } else {
       callback();
-    });
+    }
+  } catch (err) {
+    console.log(err);
+    callback();
+  }
+};
 
 export const apiSaveToken = (token) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       {
-        token
+        token,
       },
       { merge: true }
     )
@@ -148,15 +166,15 @@ export const apiSaveToken = (token) =>
 
 export const removeEventFromUsers = ({ eventId, reminderId, notificationId }) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       {
         events: firebase.firestore.FieldValue.arrayRemove({
           eventId,
           reminderId,
-          notificationId
-        })
+          notificationId,
+        }),
       },
       { merge: true }
     )
@@ -164,15 +182,15 @@ export const removeEventFromUsers = ({ eventId, reminderId, notificationId }) =>
 
 export const addEventToUser = ({ eventId, reminderId, notificationId }) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       {
         events: firebase.firestore.FieldValue.arrayUnion({
           eventId,
           reminderId,
-          notificationId
-        })
+          notificationId,
+        }),
       },
       { merge: true }
     )
@@ -180,11 +198,11 @@ export const addEventToUser = ({ eventId, reminderId, notificationId }) =>
 
 export const removeUserFromEvent = ({ eventId }) =>
   db
-    .collection('events')
+    .collection(DS.events)
     .doc(eventId)
     .set(
       {
-        users: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid)
+        users: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid),
       },
       { merge: true }
     )
@@ -192,11 +210,11 @@ export const removeUserFromEvent = ({ eventId }) =>
 
 export const addUserToEvent = ({ eventId }) =>
   db
-    .collection('events')
+    .collection(DS.events)
     .doc(eventId)
     .set(
       {
-        users: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+        users: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid),
       },
       { merge: true }
     )
@@ -204,11 +222,11 @@ export const addUserToEvent = ({ eventId }) =>
 
 export const apiUpdateSettings = async (settings) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       {
-        settings
+        settings,
       },
       { merge: true }
     )
@@ -216,14 +234,14 @@ export const apiUpdateSettings = async (settings) =>
 
 export const apiUpdateUser = async (data) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(data, { merge: true })
     .catch((err) => console.log(err));
 
 export const apiBlockUser = async ({ user }) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       { blockedUsers: firebase.firestore.FieldValue.arrayUnion(user.id) },
@@ -232,7 +250,7 @@ export const apiBlockUser = async ({ user }) =>
 
 export const apiUnblockUser = async ({ userId }) =>
   db
-    .collection('users')
+    .collection(DS.users)
     .doc(auth.currentUser.uid)
     .set(
       { blockedUsers: firebase.firestore.FieldValue.arrayRemove(userId) },

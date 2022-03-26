@@ -1,16 +1,16 @@
 const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec'
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 export const isSameDay = (someDate, otherDate, frequency, isRecurring) => {
   if (!isRecurring) {
@@ -20,13 +20,13 @@ export const isSameDay = (someDate, otherDate, frequency, isRecurring) => {
       someDate.getFullYear() == otherDate.getFullYear()
     );
   }
-  if (frequency === 'WEEKLY') {
+  if (frequency === "WEEKLY") {
     return someDate.getDay() === otherDate.getDay();
   }
-  if (frequency === 'MONTHLY') {
+  if (frequency === "MONTHLY") {
     return someDate.getDate() === otherDate.getDate();
   }
-  if (frequency === 'YEARLY') {
+  if (frequency === "YEARLY") {
     return (
       someDate.getDate() === otherDate.getDate() &&
       someDate.getMonth() === otherDate.getMonth()
