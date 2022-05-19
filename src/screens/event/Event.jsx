@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform
-} from 'react-native';
+  Platform,
+} from "react-native";
 
-import { Title, Line, Loading, Layout } from '../../elements';
-import { Comment } from '../../components';
-import { fetchEvent } from '../../firebase-api';
-import Header from './EventHeader';
-import Details from './EventDetails';
-import EventImage from './EventImage';
-import CommentInput from './CommentInput';
-import { padding } from '../../theme';
+import { Title, Line, Loading, Layout } from "../../elements";
+import { Comment } from "../../components";
+import { fetchEvent } from "../../firebase-api";
+import Header from "./EventHeader";
+import Details from "./EventDetails";
+import EventImage from "./EventImage";
+import CommentInput from "./CommentInput";
+import { padding } from "../../theme";
 
 const Event = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,9 +54,9 @@ const Event = ({ navigation, route }) => {
   return (
     <Layout>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
-          flex: 1
+          flex: 1,
         }}
       >
         <ScrollView style={{ paddingHorizontal: padding.medium, flex: 1 }}>
@@ -65,7 +65,7 @@ const Event = ({ navigation, route }) => {
           <Details
             event={event}
             blockUser={({ user }) => {
-              navigation.navigate('Block User', { userId: user.id });
+              navigation.navigate("Block User", { userId: user.id });
             }}
           />
           <Line style={{ marginVertical: 20 }} />
@@ -75,8 +75,8 @@ const Event = ({ navigation, route }) => {
               <Comment
                 comment={message}
                 blockUser={() => {
-                  navigation.navigate('Block User', {
-                    userId: message.user
+                  navigation.navigate("Block User", {
+                    userId: message.user,
                   });
                 }}
                 prevDate={
@@ -86,14 +86,14 @@ const Event = ({ navigation, route }) => {
             </View>
           ))}
         </ScrollView>
-        <CommentInput event={event} />
+        <CommentInput event={event} navigation={navigation} />
       </KeyboardAvoidingView>
     </Layout>
   );
 };
 
 const style = StyleSheet.create({
-  layout: { paddingHorizontal: 0 }
+  layout: { paddingHorizontal: 0 },
 });
 
 export default Event;

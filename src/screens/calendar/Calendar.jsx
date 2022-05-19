@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
-import { Calendar } from 'react-native-calendars';
-import { useTheme } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { useContext, useEffect, useState } from "react";
+import { Calendar } from "react-native-calendars";
+import { useTheme } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
 
-import { HAT_COLORS } from '../../data';
-import { EventContext, AuthContext } from '../../context';
-import { Layout, Loading } from '../../elements';
-import { formatCalendarDate, isSameDay } from '../../utils';
-import CalendarDrawer from './CalendarDrawer';
+import { HAT_COLORS } from "../../data";
+import { RS } from "../../strings";
+import { EventContext, AuthContext } from "../../context";
+import { Layout, Loading } from "../../elements";
+import { formatCalendarDate, isSameDay } from "../../utils";
+import CalendarDrawer from "./CalendarDrawer";
 
 function CalendarScreen({ navigation }) {
   const { colors } = useTheme();
@@ -18,12 +19,15 @@ function CalendarScreen({ navigation }) {
     day: initialDate.getDate(),
     month: initialDate.getMonth() + 1,
     year: initialDate.getFullYear(),
-    dateString: formatCalendarDate(initialDate)
+    dateString: formatCalendarDate(initialDate),
   });
   const [markedDates, setMarkedDates] = useState({});
   const [height, setHeight] = useState(400);
 
+  // Events filtered by the selected city
   let filteredEvents = [];
+
+  // Events happenning today in the filtered events
   let dailyEvents = [];
 
   if (events) {
@@ -39,24 +43,52 @@ function CalendarScreen({ navigation }) {
             selectedDate.month - 1,
             selectedDate.day
           );
-          const eventDate = new Date(event.dateTime.toDate());
-          return isSameDay(date, eventDate, event.frequency, event.isRecurring);
+
+          // We just need the day and not the time, so the calculation later will not have problems
+          let tempDate = new Date(
+            (event.startDateTime ?? event.dateTime).toDate()
+          );
+          const eventStartDate = new Date(
+            tempDate.getFullYear(),
+            tempDate.getMonth(),
+            tempDate.getDate()
+          );
+          let eventEndDate;
+          if (event.isMultiday) {
+            tempDate = new Date(event.endDateTime.toDate());
+            eventEndDate = new Date(
+              tempDate.getFullYear(),
+              tempDate.getMonth(),
+              tempDate.getDate()
+            );
+          }
+          const isHappeningToday =
+            isSameDay(
+              date,
+              eventStartDate,
+              event.frequency,
+              event.isRecurring
+            ) ||
+            (event.isMultiday &&
+              eventStartDate <= date &&
+              eventEndDate >= date);
+          return isHappeningToday;
         })
         .sort(function (a, b) {
-          return a.dateTime
+          return (a.startDateTime ?? a.dateTime)
             .toDate()
             .toTimeString()
-            .localeCompare(b.dateTime.toDate().toTimeString());
+            .localeCompare(
+              (b.startDateTime ?? b.dateTime).toDate().toTimeString()
+            );
         });
     }
   }
 
-  const handleDayPress = (day) => {
-    setSelectedDate(day);
-  };
-  const handleEventPress = (id) => {
-    navigation.navigate('Event', { id });
-  };
+  const handleDayPress = (day) => setSelectedDate(day);
+
+  const handleEventPress = (id) => navigation.navigate(RS.event, { id });
+
   const addSelectedDateToMarkedDates = (preMarkedDates, selectedDate) => {
     const newMarkedDates = { ...preMarkedDates };
     newMarkedDates[selectedDate.dateString] = {
@@ -64,7 +96,7 @@ function CalendarScreen({ navigation }) {
       selected: true,
       disableTouchEvent: true,
       selectedColor: colors.p3,
-      selectedTextColor: 'black'
+      selectedTextColor: "black",
     };
     return newMarkedDates;
   };
@@ -72,36 +104,53 @@ function CalendarScreen({ navigation }) {
   useEffect(() => {
     if (filteredEvents.length > 0) {
       const newMarkedDates = {};
-      const getColor = (event) => colors[HAT_COLORS[event.hats[0] || 'p1']];
+      const getColor = (event) => colors[HAT_COLORS[event.hats[0] || "p1"]];
       const addEvent = (event, date) => {
         if (newMarkedDates[date]) {
           newMarkedDates[date].dots.push({
-            color: getColor(event)
+            color: getColor(event),
           });
         } else {
           newMarkedDates[date] = {
             dots: [
               {
-                color: getColor(event)
-              }
-            ]
+                color: getColor(event),
+              },
+            ],
           };
         }
       };
 
       filteredEvents.forEach((event) => {
-        const eventDate = event.dateTime.toDate();
-        if (event.frequency !== '') {
+        const eventStartDate = (event.startDateTime ?? event.dateTime).toDate();
+        let eventEndDate;
+        if (event.isMultiday) {
+          let temp = event.endDateTime.toDate();
+          eventEndDate = new Date(
+            temp.getFullYear(),
+            temp.getMonth(),
+            temp.getDate()
+          );
+        }
+        if (event.frequency !== "" || event.isMultiday) {
           for (let i = -7; i < 40; i++) {
             const date = new Date(selectedDate.year, selectedDate.month - 1, i);
             if (
-              isSameDay(date, eventDate, event.frequency, event.isRecurring)
+              isSameDay(
+                date,
+                eventStartDate,
+                event.frequency,
+                event.isRecurring
+              ) ||
+              (event.isMultiday &&
+                date >= eventStartDate &&
+                date <= eventEndDate)
             ) {
               addEvent(event, formatCalendarDate(date));
             }
           }
         } else {
-          addEvent(event, formatCalendarDate(eventDate));
+          addEvent(event, formatCalendarDate(eventStartDate));
         }
       });
       setMarkedDates(newMarkedDates);
@@ -122,7 +171,7 @@ function CalendarScreen({ navigation }) {
           current={initialDate.toDateString()}
           onMonthChange={handleDayPress}
           onDayPress={handleDayPress}
-          markingType={'multi-dot'}
+          markingType={"multi-dot"}
           markedDates={addSelectedDateToMarkedDates(markedDates, selectedDate)}
           style={[style.calendar]}
         />
@@ -139,12 +188,12 @@ function CalendarScreen({ navigation }) {
 
 const style = StyleSheet.create({
   container: {
-    position: 'relative',
-    flex: 1
+    position: "relative",
+    flex: 1,
   },
   calendar: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });
 
 export default CalendarScreen;

@@ -1,24 +1,24 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import * as React from "react";
+import { View, StyleSheet } from "react-native";
 import {
   useNavigationBuilder,
   DrawerRouter,
-  createNavigatorFactory
-} from '@react-navigation/native';
+  createNavigatorFactory,
+} from "@react-navigation/native";
 
-import { Drawer } from '../components';
+import { Drawer } from "../components";
 
 const MyNavigationContent = ({
   initialRouteName,
   children,
   screenOptions,
-  contentStyle
+  contentStyle,
 }) => {
   const { state, navigation, descriptors, NavigationContent } =
     useNavigationBuilder(DrawerRouter, {
       children,
       screenOptions,
-      initialRouteName
+      initialRouteName,
     });
   return (
     <NavigationContent>

@@ -1,31 +1,60 @@
-import React, { useContext } from 'react';
-import { View, Text } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, { useContext } from "react";
+import { View, Text } from "react-native";
+import { useTheme } from "react-native-paper";
 
-import { AuthContext } from '../../context';
-import { DAYS_OF_THE_WEEK } from '../../data';
-import { Title, IconButton } from '../../elements';
-import { extractDate, extractTime, handleInterestPress } from '../../utils';
+import { AuthContext } from "../../context";
+import { DAYS_OF_THE_WEEK } from "../../data";
+import { RS } from "../../strings";
+import { Title, IconButton } from "../../elements";
+import { extractDate, extractTime, handleInterestPress } from "../../utils";
 
 const Header = ({ event, navigation }) => {
   const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
-  const { title, dateTime, frequency, users, id, creator, isRecurring } = event;
+  const {
+    title,
+    dateTime,
+    startDateTime,
+    endDateTime,
+    frequency,
+    users,
+    id,
+    creator,
+    isRecurring,
+    isMultiday,
+  } = event;
 
-  const displayDate = extractDate(dateTime);
-  const displayTime = extractTime(dateTime);
+  const tmpStartDateTime = startDateTime ?? dateTime;
+
+  const displayStartDate = extractDate(tmpStartDateTime);
+  const displayStartTime = extractTime(tmpStartDateTime);
+
+  const displayEndDate = extractDate(endDateTime);
+  const displayEndTime = extractTime(endDateTime);
 
   const isInterested =
     users && currentUser ? users.includes(currentUser.id) : false;
+
+  function getDisplayDateTime() {
+    if (isRecurring) {
+      if (frequency == "WEEKLY") {
+        const dayOfTheWeek =
+          DAYS_OF_THE_WEEK[(startDateTime ?? dateTime).toDate().getDay()];
+        return `Every ${dayOfTheWeek} - ${displayStartTime}`;
+      } else return `${frequency} - ${displayStartDate}`;
+    } else if (isMultiday) {
+      return `From\t${displayStartDate} - ${displayStartTime}\nTo\t\t${displayEndDate} - ${displayEndTime}`;
+    } else return `${displayStartDate} - ${displayStartTime}`;
+  }
 
   return (
     <View style={{ marginBottom: 20 }}>
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: 24
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 24,
         }}
       >
         <Title
@@ -34,28 +63,24 @@ const Header = ({ event, navigation }) => {
         >
           {title}
         </Title>
-        {currentUser.id === creator && (
+        {currentUser?.id === creator && (
           <IconButton
             icon="pencil"
             color={colors.p1}
-            onPress={() => navigation.navigate('Edit Event', { id })}
+            onPress={() => navigation.navigate(RS.editEvent, { id })}
           />
         )}
       </View>
       <Text style={{ color: colors.p2, fontSize: 14 }}>
-        {`${
-          isRecurring
-            ? frequency == 'WEEKLY'
-              ? `Every ${DAYS_OF_THE_WEEK[dateTime.toDate().getDay()]} `
-              : `${frequency} - ${displayDate}`
-            : displayDate
-        } - ${displayTime}`}
+        {getDisplayDateTime()}
       </Text>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <IconButton
-          onPress={() => handleInterestPress(currentUser, event, isInterested)}
-          title={isInterested ? 'Interested' : 'Show Interest'}
-          icon={isInterested ? 'star' : 'star-outline'}
+          onPress={() =>
+            handleInterestPress(currentUser, event, isInterested, navigation)
+          }
+          title={isInterested ? "Interested" : "Show Interest"}
+          icon={isInterested ? "star" : "star-outline"}
           color={colors.p2}
           style={{ marginLeft: -6 }}
         />

@@ -1,31 +1,33 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, { useState } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import { useTheme } from "react-native-paper";
 
-import { TextInput, Button, Error } from '../../elements';
-import { apiLogin, apiResetPassword } from '../../firebase-api';
+import { TextInput, Button, Error } from "../../elements";
+import { apiLogin, apiResetPassword } from "../../firebase-api";
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const { colors } = useTheme();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState();
-  const [rightIcon, setRightIcon] = useState('eye');
+  const [rightIcon, setRightIcon] = useState("eye");
   const [positive, setPositive] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const handleSignIn = () => {
     if (email && password) {
-      apiLogin({ email, password }).catch((error) => setError(error.message));
+      apiLogin({ email, password, navigation }).catch((error) =>
+        setError(error.message)
+      );
     }
   };
 
   const handlePasswordVisibility = () => {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-off');
+    if (rightIcon === "eye") {
+      setRightIcon("eye-off");
       setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-off') {
-      setRightIcon('eye');
+    } else if (rightIcon === "eye-off") {
+      setRightIcon("eye");
       setPasswordVisibility(!passwordVisibility);
     }
   };
@@ -37,7 +39,7 @@ const Login = () => {
           .then(() => {
             setPositive(true);
             setError(
-              'We sent you an email to update your password! Ignore it, if you no longer wish to reset you password.'
+              "We sent you an email to update your password! Ignore it, if you no longer wish to reset you password."
             );
           })
           .catch((error) => {
@@ -47,19 +49,19 @@ const Login = () => {
         setError(error.message);
       }
     } else {
-      setError('Must input email');
+      setError("Must input email");
     }
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{
         padding: 20,
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: colors.g2
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.g2,
       }}
     >
       <TextInput
@@ -96,7 +98,7 @@ const Login = () => {
       <Button
         title="Forgot Password?"
         onPress={handlePress}
-        style={{ backgroundColor: 'none' }}
+        style={{ backgroundColor: "none" }}
         size="small"
       />
     </KeyboardAvoidingView>

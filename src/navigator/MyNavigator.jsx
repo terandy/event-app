@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../context";
 import {
   SettingsScreen,
   InfoScreen,
@@ -6,60 +8,86 @@ import {
   DeleteEventScreen,
   CreateEventScreen,
   Eula,
-  BlockUserScreen
-} from '../screens';
-import TabNavigator from './TabNavigator';
-import { createMyNavigator } from './createMyNavigator';
+  BlockUserScreen,
+  DonateScreen,
+  Login,
+  Register,
+  Landing,
+} from "../screens";
+import { RS } from "../strings";
+import TabNavigator from "./TabNavigator";
+import { createMyNavigator } from "./createMyNavigator";
 
 const My = createMyNavigator();
 
 function MyNavigator() {
+  const { isLoggedIn } = useContext(AuthContext);
   return (
     <My.Navigator>
       <My.Screen
-        name="Home"
+        name={RS.home}
         component={TabNavigator}
-        options={{ title: 'Home', hide: true }}
+        options={{ title: "Home", hide: true }}
       />
       <My.Screen
-        name="Settings"
+        name={RS.settings}
         component={SettingsScreen}
-        options={{ title: 'Settings' }}
+        options={{ title: "Settings", hide: !isLoggedIn }}
       />
       <My.Screen
-        name="Info"
+        name={RS.info}
         component={InfoScreen}
-        options={{ title: 'Info' }}
+        options={{ title: "Info" }}
       />
       <My.Screen
-        name="Event"
+        name={RS.event}
         component={EventScreen}
-        options={{ title: 'Event', hide: true }}
+        options={{ title: "Event", hide: true }}
       />
       <My.Screen
-        name="Edit Event"
+        name={RS.editEvent}
         component={EditEventScreen}
-        options={{ title: 'Edit Event', hide: true }}
+        options={{ title: "Edit Event", hide: true }}
       />
       <My.Screen
-        name="Delete Event"
+        name={RS.deleteEvent}
         component={DeleteEventScreen}
-        options={{ title: 'Delete Event', hide: true }}
+        options={{ title: "Delete Event", hide: true }}
       />
       <My.Screen
-        name="Create Event"
+        name={RS.createEvent}
         component={CreateEventScreen}
-        options={{ title: 'Create Event' }}
+        options={{ title: "Create Event" }}
       />
       <My.Screen
-        name="Eula"
+        name={RS.eula}
         component={Eula}
-        options={{ title: 'Eula', hide: true }}
+        options={{ title: "Eula", hide: true }}
       />
       <My.Screen
-        name="Block User"
+        name={RS.blockUser}
         component={BlockUserScreen}
-        options={{ title: 'Block User', hide: true }}
+        options={{ title: "Block User", hide: true }}
+      />
+      <My.Screen
+        name={RS.donate}
+        component={DonateScreen}
+        options={{ title: "Donate" }}
+      />
+      <My.Screen
+        name={RS.landing}
+        component={Landing}
+        options={{ title: "Landing", hide: true }}
+      />
+      <My.Screen
+        name={RS.register}
+        component={Register}
+        options={{ title: "Register", hide: isLoggedIn }}
+      />
+      <My.Screen
+        name={RS.login}
+        component={Login}
+        options={{ title: "Login", hide: isLoggedIn }}
       />
     </My.Navigator>
   );

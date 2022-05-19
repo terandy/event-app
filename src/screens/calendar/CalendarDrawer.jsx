@@ -1,64 +1,64 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   Animated,
   Text,
-  View
-} from 'react-native';
-import { useTheme } from 'react-native-paper';
-import Icons from '@expo/vector-icons/MaterialCommunityIcons';
+  View,
+} from "react-native";
+import { useTheme } from "react-native-paper";
+import Icons from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { formatDate } from '../../utils';
-import { Title } from '../../elements';
-import { EventDrawerCard } from '../../components';
-import { padding } from '../../theme';
-import { ICON_SIZE } from '../../data';
+import { formatDate } from "../../utils";
+import { Title } from "../../elements";
+import { EventDrawerCard } from "../../components";
+import { padding } from "../../theme";
+import { ICON_SIZE } from "../../data";
 
 const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
   const { colors } = useTheme();
 
   const heightOptions = {
     inputRange: [0, 1],
-    outputRange: [120, 600]
+    outputRange: [120, 600],
   };
   const spinOptions = {
     inputRange: [0, 1],
-    outputRange: ['180deg', '0deg'] // <-- any value larger than your content's height
+    outputRange: ["180deg", "0deg"], // <-- any value larger than your content's height
   };
   const anim = useRef(new Animated.Value(0)).current;
-  const [drawerState, setDrawerState] = useState('open');
+  const [drawerState, setDrawerState] = useState("open");
 
-  const date = new Date(selectedDate.replace(/-/g, '/'));
+  const date = new Date(selectedDate.replace(/-/g, "/"));
   const title = formatDate(date);
 
   const openDrawer = () => {
-    setDrawerState('transition');
+    setDrawerState("transition");
     Animated.timing(anim, {
       toValue: 1,
       duration: 500, // <-- animation duration
-      useNativeDriver: false // <-- need to set false to prevent yellow box warning
+      useNativeDriver: false, // <-- need to set false to prevent yellow box warning
     }).start(() => {
-      setDrawerState('open');
+      setDrawerState("open");
     });
   };
   const closeDrawer = () => {
-    setDrawerState('transition');
+    setDrawerState("transition");
     Animated.timing(anim, {
       toValue: 0,
       duration: 500, // <-- animation duration
-      useNativeDriver: false // <-- need to set false to prevent yellow box warning
+      useNativeDriver: false, // <-- need to set false to prevent yellow box warning
     }).start(() => {
-      setDrawerState('close');
+      setDrawerState("close");
     });
   };
 
   const handlePress = () => {
-    if (drawerState === 'open') {
+    if (drawerState === "open") {
       closeDrawer();
     }
-    if (drawerState === 'close') {
+    if (drawerState === "close") {
       openDrawer();
     }
   };
@@ -73,27 +73,27 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
         style.container,
         {
           backgroundColor: colors.p1,
-          maxHeight: anim.interpolate(heightOptions)
-        }
+          maxHeight: anim.interpolate(heightOptions),
+        },
       ]}
     >
       <TouchableOpacity
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingRight: 20
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingRight: 20,
         }}
         onPress={handlePress}
       >
         <Title size="large" color="white" style={style.title}>
-          {title || 'No Events'}
+          {title || "No Events"}
         </Title>
         <Animated.View
           style={[
             {
-              transform: [{ rotate: anim.interpolate(spinOptions) }]
-            }
+              transform: [{ rotate: anim.interpolate(spinOptions) }],
+            },
           ]}
         >
           <Icons name="chevron-down" color="white" size={ICON_SIZE.small} />
@@ -104,6 +104,7 @@ const CalendarDrawer = ({ dailyEvents, selectedDate, handleEventPress }) => {
           <EventDrawerCard
             key={`drawer-${event.id}`}
             event={event}
+            selectedDate={selectedDate}
             onPress={handleEventPress}
           />
         ))}
@@ -118,12 +119,12 @@ const style = StyleSheet.create({
     paddingBottom: padding.xsmall,
     borderTopEndRadius: padding.medium,
     borderTopStartRadius: padding.medium,
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
-    left: 0
+    left: 0,
   },
-  title: { paddingLeft: padding.medium }
+  title: { paddingLeft: padding.medium },
 });
 
 export default CalendarDrawer;
