@@ -21,7 +21,7 @@ export default {
       bundleIdentifier: "com.terandy.yspapp",
       buildNumber: "1.5.6",
       config: {
-        googleMobileAdsAppId: "ca-app-pub-5055103069379901~5676793545",
+        googleMobileAdsAppId: "ca-app-pub-2820270410110980~5767285665",
       },
       infoPlist: {
         NSCalendarsUsageDescription:
@@ -37,7 +37,7 @@ export default {
       versionCode: 56,
       googleServicesFile: "./google-services.json",
       config: {
-        googleMobileAdsAppId: "ca-app-pub-5055103069379901~3840967691",
+        googleMobileAdsAppId: "ca-app-pub-2820270410110980~3829466543",
       },
     },
     web: {
