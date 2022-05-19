@@ -4,17 +4,24 @@ import { Text, ScrollView, Platform, Linking } from "react-native";
 import { Title, Layout, ExternalLink } from "../../elements";
 import { padding } from "../../theme";
 import { AdMobInterstitial } from "expo-ads-admob";
+import { adUnitIds, testAdUnitIds } from "../../services/admob";
 
-const Donate = ({ navigation, route }) => {
+const Donate = () => {
   const [error, setError] = useState(false);
 
   const adUnitId =
     Platform.OS === "ios"
-      ? "ca-app-pub-5055103069379901/3144454389"
-      : "ca-app-pub-5055103069379901/9354639511";
+      ? adUnitIds.ios.interstitial
+      : // android
+        adUnitIds.android.interstitial;
+  const testAdUnitId =
+    Platform.OS === "ios"
+      ? testAdUnitIds.ios.interstitial
+      : // android
+        testAdUnitIds.android.interstitial;
   const showInterstitial = async () => {
     try {
-      await AdMobInterstitial.setAdUnitID(adUnitId);
+      await AdMobInterstitial.setAdUnitID(__DEV__ ? testAdUnitId : adUnitId);
       await AdMobInterstitial.requestAdAsync({
         servePersonalizedAds: true,
       });
@@ -23,7 +30,7 @@ const Donate = ({ navigation, route }) => {
       setError(true);
     }
   };
-  const handleWatchAdd = () => {
+  const handleWatchAd = () => {
     showInterstitial();
   };
   const message = `Hey There!\nDid you know that donations to YSP covers service activities costs, grant funding to deserving youth and youth projects, and finally maintenance costs for the app and website? All donations above $10 are also eligible for a Tax Receipt too! 
@@ -55,7 +62,7 @@ const Donate = ({ navigation, route }) => {
         />
         <ExternalLink
           title={"Watch an ad"}
-          onPress={handleWatchAdd}
+          onPress={handleWatchAd}
           size="small"
           style={{ marginBottom: 12 }}
         />
