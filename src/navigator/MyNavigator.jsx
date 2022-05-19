@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../context";
 import {
   SettingsScreen,
   InfoScreen,
@@ -8,6 +10,9 @@ import {
   Eula,
   BlockUserScreen,
   DonateScreen,
+  Login,
+  Register,
+  Landing,
 } from "../screens";
 import { RS } from "../strings";
 import TabNavigator from "./TabNavigator";
@@ -16,6 +21,7 @@ import { createMyNavigator } from "./createMyNavigator";
 const My = createMyNavigator();
 
 function MyNavigator() {
+  const { isLoggedIn } = useContext(AuthContext);
   return (
     <My.Navigator>
       <My.Screen
@@ -26,7 +32,7 @@ function MyNavigator() {
       <My.Screen
         name={RS.settings}
         component={SettingsScreen}
-        options={{ title: "Settings" }}
+        options={{ title: "Settings", hide: !isLoggedIn }}
       />
       <My.Screen
         name={RS.info}
@@ -67,6 +73,21 @@ function MyNavigator() {
         name={RS.donate}
         component={DonateScreen}
         options={{ title: "Donate" }}
+      />
+      <My.Screen
+        name={RS.landing}
+        component={Landing}
+        options={{ title: "Landing", hide: true }}
+      />
+      <My.Screen
+        name={RS.register}
+        component={Register}
+        options={{ title: "Register", hide: isLoggedIn }}
+      />
+      <My.Screen
+        name={RS.login}
+        component={Login}
+        options={{ title: "Login", hide: isLoggedIn }}
       />
     </My.Navigator>
   );

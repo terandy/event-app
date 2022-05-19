@@ -18,4 +18,7 @@ export const RS = {
   eula: "Eula",
   blockUser: "Block User",
   donate: "Donate",
+  register: "Register",
+  login: "Login",
+  landing: "Landing",
 };

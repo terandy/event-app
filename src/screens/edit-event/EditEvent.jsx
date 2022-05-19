@@ -1,5 +1,4 @@
-// TODO: Update the date and time to startDateTime and endDateTime
-// TODO: Form validation (npm install 'react-native-form-validator' --save)
+// TODO: [LATER] Form validation (npm install 'react-native-form-validator' --save)
 
 import React, { useContext, useState, useEffect } from "react";
 import {
@@ -36,7 +35,7 @@ import { AuthContext } from "../../context";
 import { handleUpdateEvent } from "../../utils";
 import { RS } from "../../strings";
 
-const CreateEvent = ({ navigation, route }) => {
+const EditEvent = ({ navigation, route }) => {
   const { colors } = useTheme();
   const { currentUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,17 +43,20 @@ const CreateEvent = ({ navigation, route }) => {
 
   const id = route.params?.id;
 
-  const [date, setDate] = useState(new Date(Date.now()));
-  const [description, setDescription] = useState();
-  const [title, setTitle] = useState();
-  const [location, setLocation] = useState();
-  const [website, setWebsite] = useState();
-  const [zoomLink, setZoomLink] = useState();
-  const [time, setTime] = useState(new Date(Date.now()));
-  const [cities, setCities] = useState([CITIES[0]]);
-  const [hats, setHats] = useState(["YSP"]);
+  // const [date, setDate] = useState(new Date(Date.now()));
+  // const [time, setTime] = useState(new Date(Date.now()));
+  const [startDateTime, setStartDateTime] = useState(new Date(Date.now()));
+  const [endDateTime, setEndDateTime] = useState(new Date(Date.now()));
+  const [description, setDescription] = useState(event?.description ?? "");
+  const [title, setTitle] = useState(event?.title ?? "");
+  const [location, setLocation] = useState(event?.location);
+  const [website, setWebsite] = useState(event?.website);
+  const [zoomLink, setZoomLink] = useState(event?.zoomLink);
+  const [cities, setCities] = useState(event?.cities ?? [CITIES[0]]);
+  const [hats, setHats] = useState(event?.hats ?? ["YSP"]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [frequency, setFrequency] = useState("");
+  const [isMultiday, setIsMultiday] = useState(event?.isMultiday ?? false);
+  const [frequency, setFrequency] = useState(event?.frequency);
   const [image, setImage] = useState();
   const [hasImageChanged, setHasImageChanged] = useState(false);
 
@@ -88,24 +90,26 @@ const CreateEvent = ({ navigation, route }) => {
   };
 
   const saveEvent = async () => {
-    const dateTime = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      time.getHours(),
-      time.getMinutes()
-    );
     const data = {
       description,
       title,
-      location,
-      website,
-      zoomLink,
       cities,
       hats,
-      frequency,
       isRecurring,
-      dateTime,
+      startDateTime,
+      endDateTime,
+      ...(isRecurring && {
+        frequency,
+      }),
+      ...(location && {
+        location,
+      }),
+      ...(website && {
+        website,
+      }),
+      ...(zoomLink && {
+        zoomLink,
+      }),
     };
     Object.keys(data).forEach((k) => data[k] == null && delete data[k]);
     setIsLoading(true);
@@ -131,17 +135,37 @@ const CreateEvent = ({ navigation, route }) => {
       handleUpdateEvent(currentUser, {
         id: event.id,
         title,
-        dateTime: new Date(dateTime),
+        // TODO: [LATER] Delete "dateTime" after full migration to the new structure
+        dateTime: new Date(startDateTime),
+        startDateTime: new Date(startDateTime),
+        isMultiday,
         description,
-        frequency,
         isRecurring,
         users: event.users,
         messages: event.messages,
+        // Add endDateTime to the object only if multiple days is enabled.
+        ...(isMultiday && {
+          endDateTime,
+        }),
+        // Add frequency to the object only if isRecurring is enabled.
+        ...(isRecurring && {
+          frequency,
+        }),
+        ...(location && {
+          location,
+        }),
+        ...(website && {
+          website,
+        }),
+        ...(zoomLink && {
+          zoomLink,
+        }),
       });
     }
   };
 
   useEffect(() => {
+    console.log("id useEffect");
     if (id) {
       let unsubscribe = () => {};
       const callback = async () => {
@@ -169,8 +193,9 @@ const CreateEvent = ({ navigation, route }) => {
   useEffect(() => {
     if (event) {
       setTitle(event.title);
-      setDate(event.dateTime?.toDate());
-      setTime(event.dateTime?.toDate());
+      setStartDateTime(event.startDateTime?.toDate());
+      setEndDateTime(event.endDateTime?.toDate());
+      setIsMultiday(event.isMultiday);
       setDescription(event.description);
       setLocation(event.location);
       setZoomLink(event.zoomLink);
@@ -186,6 +211,92 @@ const CreateEvent = ({ navigation, route }) => {
   if (isLoading) {
     return <Loading />;
   }
+
+  const renderEndDateColumn = () => (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "column",
+      }}
+    >
+      <Title
+        size="medium"
+        color={colors.g1}
+        style={{ marginLeft: 12, marginRight: 24 }}
+      >
+        To
+      </Title>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <Title
+          size="small"
+          color={colors.g1}
+          style={{ marginLeft: 12, marginRight: 24 }}
+        >
+          Date
+        </Title>
+        <DateTimeInput
+          setValue={(value) =>
+            setEndDateTime(
+              new Date(
+                value.getFullYear(),
+                value.getMonth(),
+                value.getDate(),
+                endDateTime.getHours(),
+                endDateTime.getMinutes()
+              )
+            )
+          }
+          value={endDateTime}
+          mode="date"
+          style={{ flex: 1 }}
+        />
+        {!isMultiday && (
+          <PillButton
+            title="Multiday"
+            onPress={() => setIsMultiday(true)}
+            style={{ marginRight: 24 }}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <Title
+          size="small"
+          color={colors.g1}
+          style={{ marginLeft: 12, marginRight: 24 }}
+        >
+          Time
+        </Title>
+        <DateTimeInput
+          setValue={(value) =>
+            setEndDateTime(
+              new Date(
+                endDateTime.getFullYear(),
+                endDateTime.getMonth(),
+                endDateTime.getDate(),
+                value.getHours(),
+                value.getMinutes()
+              )
+            )
+          }
+          value={endDateTime}
+          mode="time"
+          style={{ flex: 1 }}
+        />
+      </View>
+    </View>
+  );
 
   return (
     <Layout>
@@ -210,47 +321,110 @@ const CreateEvent = ({ navigation, route }) => {
               value={title}
               style={{ marginBottom: 24 }}
             />
+            {isMultiday && (
+              <PillButton
+                title="Single Day Event"
+                onPress={() => setIsMultiday(false)}
+                style={{ marginBottom: 12, width: 150 }}
+              />
+            )}
             <View
               style={{
                 flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 12,
               }}
             >
-              <Title
-                size="small"
-                color={colors.g1}
-                style={{ marginLeft: 12, marginRight: 24 }}
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "column",
+                }}
               >
-                Date
-              </Title>
-              <DateTimeInput
-                setValue={setDate}
-                value={date}
-                mode="date"
-                style={{ flex: 1 }}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 12,
-              }}
-            >
-              <Title
-                size="small"
-                color={colors.g1}
-                style={{ marginLeft: 12, marginRight: 24 }}
-              >
-                Time
-              </Title>
-              <DateTimeInput
-                setValue={setTime}
-                value={time}
-                mode="time"
-                style={{ flex: 1 }}
-              />
+                {isMultiday && (
+                  <Title
+                    size="medium"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    From
+                  </Title>
+                )}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <Title
+                    size="small"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    Date
+                  </Title>
+                  <DateTimeInput
+                    setValue={(value) =>
+                      setStartDateTime(
+                        new Date(
+                          value.getFullYear(),
+                          value.getMonth(),
+                          value.getDate(),
+                          startDateTime.getHours(),
+                          startDateTime.getMinutes()
+                        )
+                      )
+                    }
+                    value={startDateTime}
+                    mode="date"
+                    style={{ flex: 1 }}
+                  />
+                  {!isMultiday && (
+                    <PillButton
+                      title="Multiple Days"
+                      onPress={() => {
+                        setIsMultiday(true);
+                        if (endDateTime !== null) return;
+                        let tmp = new Date(startDateTime);
+                        tmp.setDate(startDateTime.getDate() + 1);
+                        setEndDateTime(tmp);
+                      }}
+                      style={{ marginRight: 24 }}
+                    />
+                  )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <Title
+                    size="small"
+                    color={colors.g1}
+                    style={{ marginLeft: 12, marginRight: 24 }}
+                  >
+                    Time
+                  </Title>
+                  <DateTimeInput
+                    setValue={(value) =>
+                      setStartDateTime(
+                        new Date(
+                          startDateTime.getFullYear(),
+                          startDateTime.getMonth(),
+                          startDateTime.getDate(),
+                          value.getHours(),
+                          value.getMinutes()
+                        )
+                      )
+                    }
+                    value={startDateTime}
+                    mode="time"
+                    style={{ flex: 1 }}
+                  />
+                </View>
+              </View>
+              {isMultiday && renderEndDateColumn()}
             </View>
             <Title
               style={{
@@ -470,4 +644,4 @@ const CreateEvent = ({ navigation, route }) => {
   );
 };
 
-export default CreateEvent;
+export default EditEvent;

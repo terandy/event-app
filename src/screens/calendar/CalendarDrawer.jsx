@@ -1,5 +1,3 @@
-// TODO: For multiday events show time in the format "end: 00:00" in the
-//  last day and and "all-day" for the days in between.
 import React, { useState, useRef, useEffect } from "react";
 import {
   ScrollView,

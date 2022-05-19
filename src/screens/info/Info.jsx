@@ -117,12 +117,20 @@ const Info = ({ navigation }) => {
         <Text style={{ textAlign: "center", marginTop: 88 }}>
           Contact us via
         </Text>
-        <Text
-          selectable={true}
-          style={{ textAlign: "center", marginBottom: 32, color: colors.p1 }}
+        <Pressable
+          onPress={() =>
+            Linking.openURL("mailto://yspcanada@outlook.com").catch((err) =>
+              console.log(err)
+            )
+          }
         >
-          yspcanada@outlook.com
-        </Text>
+          <Text
+            selectable={true}
+            style={{ textAlign: "center", marginBottom: 32, color: colors.p1 }}
+          >
+            yspcanada@outlook.com
+          </Text>
+        </Pressable>
         <Text style={{ textAlign: "center" }}>
           Notify us of any inapropriate content via
         </Text>
@@ -168,5 +176,4 @@ const Info = ({ navigation }) => {
     </Layout>
   );
 };
-
 export default Info;

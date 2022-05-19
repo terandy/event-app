@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Provider as PaperProvider, useTheme } from "react-native-paper";
 import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 
-// TODO: Add OTA updates (expo-updates)
+// TODO: [LATER] Add OTA updates (expo-updates)
 
 import {
   NotificationProvider,
@@ -52,9 +52,6 @@ function App() {
         />
       </View>
     );
-  }
-  if (!isLoggedIn) {
-    return <AuthNavigator />;
   }
   return <MyNavigator />;
 }

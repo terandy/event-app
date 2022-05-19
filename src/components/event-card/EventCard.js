@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useTheme } from "react-native-paper";
 import { View, Pressable, Text } from "react-native";
+import { NavigationContext } from "@react-navigation/native";
 
 import { AuthContext } from "../../context";
 import { Title, IconButton, Card, HatCircles } from "../../elements";
@@ -16,18 +17,36 @@ const EventCard = ({ event, style, onPress }) => {
     description,
     hats,
     startDateTime,
-    // TODO: endDateTime for multipleDay events
-    // endDateTime,
+    endDateTime,
+    dateTime,
+    isMultiday,
     frequency,
     users,
     isRecurring,
   } = event;
 
-  const displayDate = extractDate(startDateTime);
-  const displayTime = extractTime(startDateTime);
+  const displayStartDate = extractDate(startDateTime ?? event.dateTime);
+  const displayStartTime = extractTime(startDateTime ?? event.dateTime);
+
+  const displayEndDate = extractDate(endDateTime);
+  const displayEndTime = extractTime(endDateTime);
 
   const isInterested =
     users && currentUser ? users.includes(currentUser.id) : false;
+
+  const navigation = React.useContext(NavigationContext);
+
+  function getDisplayDateTime() {
+    if (isRecurring) {
+      if (frequency == "WEEKLY") {
+        const dayOfTheWeek =
+          DAYS_OF_THE_WEEK[(startDateTime ?? dateTime).toDate().getDay()];
+        return `Every ${dayOfTheWeek} - ${displayStartTime}`;
+      } else return `${frequency} - ${displayStartDate}`;
+    } else if (isMultiday) {
+      return `From\t${displayStartDate} - ${displayStartTime}\nTo\t\t${displayEndDate} - ${displayEndTime}`;
+    } else return `${displayStartDate} - ${displayStartTime}`;
+  }
 
   return (
     <Card bg={colors.p4} style={style}>
@@ -58,7 +77,12 @@ const EventCard = ({ event, style, onPress }) => {
             </View>
             <IconButton
               onPress={() =>
-                handleInterestPress(currentUser, event, isInterested)
+                handleInterestPress(
+                  currentUser,
+                  event,
+                  isInterested,
+                  navigation
+                )
               }
               icon={isInterested ? "star" : "star-outline"}
               color={colors.p1}
@@ -66,15 +90,7 @@ const EventCard = ({ event, style, onPress }) => {
             />
           </View>
           <Text style={{ color: colors.p2, fontSize: 13 }}>
-            {`${
-              isRecurring
-                ? frequency == "WEEKLY"
-                  ? `Every ${
-                      DAYS_OF_THE_WEEK[startDateTime.toDate().getDay()]
-                    } `
-                  : `${frequency} - ${displayDate}`
-                : displayDate
-            } - ${displayTime}`}
+            {getDisplayDateTime()}
           </Text>
         </View>
         <Text style={{ color: colors.g1, maxHeight: 60 }}>

@@ -1,5 +1,3 @@
-// TODO: Update the date and time to startDateTime and endDateTime
-
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import {
@@ -9,6 +7,8 @@ import {
   addUserToEvent,
   getEvent,
 } from "../firebase-api";
+
+import { RS } from "../strings";
 
 export const getTrigger = ({ time, frequency, isRecurring }) => {
   console.log("getTrigger", time, frequency);
@@ -72,12 +72,14 @@ export const getTrigger = ({ time, frequency, isRecurring }) => {
 };
 
 export const scheduleReminderNotification = async (
-  { title, id, dateTime, frequency, isRecurring },
+  // event object
+  { title, id, startDateTime, dateTime, frequency, isRecurring },
   currentUser
 ) => {
   const rt = currentUser.settings.reminderTime;
-  startTime = dateTime.toDate ? dateTime.toDate() : dateTime;
-  const reminderTime = new Date(startTime.getTime() - rt * 60 * 1000);
+  const tmp = startDateTime ?? dateTime;
+  const startTime = (tmp.toDate ? tmp.toDate() : tmp).getTime();
+  const reminderTime = new Date(startTime - rt * 60 * 1000);
   const trigger = getTrigger({ time: reminderTime, frequency, isRecurring });
   const reminderId = await Notifications.scheduleNotificationAsync({
     content: {
@@ -94,11 +96,13 @@ export const scheduleReminderNotification = async (
 export const scheduleEventNotification = async ({
   title,
   id,
+  startDateTime,
   dateTime,
   frequency,
   isRecurring,
 }) => {
-  startTime = dateTime.toDate ? dateTime.toDate() : dateTime;
+  const tmp = startDateTime ?? dateTime;
+  const startTime = (tmp.toDate ? tmp.toDate() : tmp).getTime();
   const trigger = getTrigger({ time: startTime, frequency, isRecurring });
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
@@ -174,7 +178,16 @@ export const hideInterest = async ({ event, currentUser }) => {
   }
 };
 
-export const handleInterestPress = async (currentUser, event, isInterested) => {
+export const handleInterestPress = async (
+  currentUser,
+  event,
+  isInterested,
+  navigation
+) => {
+  if (!currentUser)
+    return navigation.navigate(RS.landing, {
+      message: "Oops! Please sign in!",
+    });
   if (isInterested) {
     hideInterest({ event, currentUser });
   } else {

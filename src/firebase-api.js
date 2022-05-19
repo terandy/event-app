@@ -1,25 +1,32 @@
 import { auth, db } from "../firebase";
 import { DEFAULT_USER_SETTINGS } from "./data";
 import * as firebase from "firebase";
-import { DS } from "./strings";
+import { DS, RS } from "./strings";
 
 export const fetchAuthStateChanged = (callback) =>
   auth.onAuthStateChanged(callback);
 
 export const apiLogout = async () => auth.signOut();
 
-export const apiLogin = async ({ email, password }) =>
-  auth.signInWithEmailAndPassword(email, password);
+export const apiLogin = async ({ email, password, navigation }) =>
+  auth
+    .signInWithEmailAndPassword(email, password)
+    .then((_) => navigation.navigate(RS.home));
 
-export const apiRegister = async ({ email, password, name }) =>
-  auth.createUserWithEmailAndPassword(email, password).then(() =>
-    db.collection(DS.users).doc(auth.currentUser.uid).set({
-      id: auth.currentUser.uid,
-      name,
-      email,
-      settings: DEFAULT_USER_SETTINGS,
-      events: [],
-    })
+export const apiRegister = async ({ email, password, name, navigation }) =>
+  auth.createUserWithEmailAndPassword(email, password).then(
+    async () =>
+      await db
+        .collection(DS.users)
+        .doc(auth.currentUser.uid)
+        .set({
+          id: auth.currentUser.uid,
+          name,
+          email,
+          settings: DEFAULT_USER_SETTINGS,
+          events: [],
+        })
+        .then(() => navigation.navigate(RS.home))
   );
 export const apiResetPassword = async ({ email }) =>
   auth.sendPasswordResetEmail(email);
@@ -122,12 +129,12 @@ export const apiUploadImage = async ({ eventId, image, callback }) => {
   task.on("state_changed", taskProgress, taskError, taskCompleted);
 };
 
-// TODO: Make all in a transaction to be safer.
+// TODO: [LATER] Make all in a transaction to be safer.
 export const apiCreateEvent = async ({ data, image, callback }) => {
   try {
     const res = await db.collection(DS.events).add(data);
 
-    // TODO: Remove this step after everyone has the updated version.
+    // TODO: [LATER] Remove this step after everyone has the updated version.
     // The document snapshot already has the id property. No needs to save id
     // inside the document data. We take the id when fetching the data.
     // add id to doc

@@ -1,8 +1,3 @@
-// TODO: Update the date and time to startDateTime and endDateTime
-//  If there's no way to force the app to update, then it still
-//  should accept using "dateTime" until everyone has the latest
-//  version of the app
-
 import { useContext, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useTheme } from "react-native-paper";
@@ -15,22 +10,22 @@ import { RS } from "../../strings";
 import { isSameDay } from "../../utils/extract-date";
 
 function EventListScreen({ navigation }) {
-  const { selectedCity } = useContext(AuthContext);
+  const { selectedCity, currentUser } = useContext(AuthContext);
   const { events } = useContext(EventContext);
-  const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
   const [showMore, setShowMore] = useState(false);
 
-  // const version = Constants.manifest.version;
+  function isBlockedContent(event) {
+    return !(
+      currentUser &&
+      (!currentUser.blockedUsers ||
+        !currentUser.blockedUsers.includes(event.creator))
+    );
+  }
 
   const todayEvents = events?.filter((event) => {
     const today = new Date(Date.now());
     today.setHours(0, 0, 0, 0);
-
-    const userIsValid =
-      currentUser &&
-      (!currentUser.blockedUsers ||
-        !currentUser.blockedUsers.includes(event.creator));
 
     const isStartDay = isSameDay(
       (event.startDateTime ?? event.dateTime).toDate(),
@@ -41,10 +36,11 @@ function EventListScreen({ navigation }) {
       event.isMultiday &&
       event.startDateTime.toDate() <= today &&
       event.endDateTime.toDate() >= today;
-    console.log(isOtherDayOfMultidayEvent);
 
     return (
-      userIsValid &&
+      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
+      //  if they aren't logged in.
+      (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       (isStartDay || isOtherDayOfMultidayEvent)
     );
@@ -58,22 +54,23 @@ function EventListScreen({ navigation }) {
       now.getMonth(),
       now.getDate() + 1
     );
+    const startDateTime = (event.startDateTime ?? event.dateTime).toDate();
 
     return (
-      currentUser &&
-      (!currentUser.blockedUsers ||
-        !currentUser.blockedUsers.includes(event.creator)) &&
+      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
+      //  if they aren't logged in.
+      (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       !event.isRecurring &&
-      event.dateTime.toDate() >= tomorrow
+      startDateTime >= tomorrow
     );
   });
 
   const recurringEvents = events?.filter((event) => {
     return (
-      currentUser &&
-      (!currentUser.blockedUsers ||
-        !currentUser.blockedUsers.includes(event.creator)) &&
+      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
+      //  if they aren't logged in.
+      (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       event.isRecurring
     );

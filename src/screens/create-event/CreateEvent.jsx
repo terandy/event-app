@@ -1,4 +1,5 @@
-// TODO: Form validation (npm install 'react-native-form-validator' --save)
+// TODO: [LATER] Form validation (npm install 'react-native-form-validator' --save)
+// TODO: [LATER] Reuse the code for both CreateEvent and EditEvent screens.
 
 import React, { useState, useContext } from "react";
 import {
@@ -28,11 +29,21 @@ import { apiCreateEvent } from "../../firebase-api";
 import { padding } from "../../theme";
 import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from "../../data";
 import { AuthContext } from "../../context";
+import { useEffect } from "react/cjs/react.development";
 
 const CreateEvent = ({ navigation }) => {
+  const { currentUser } = useContext(AuthContext);
+
+  if (!currentUser)
+    useEffect(() => {
+      navigation.navigate(RS.landing, {
+        message:
+          "Oops! Please sign in!\nOnly approved members allowed to create events.",
+      });
+    });
+
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const { currentUser } = useContext(AuthContext);
 
   const [startDateTime, setStartDateTime] = useState(new Date(Date.now()));
   const [endDateTime, setEndDateTime] = useState(new Date(Date.now()));
@@ -79,12 +90,8 @@ const CreateEvent = ({ navigation }) => {
     const data = {
       description,
       title,
-      location,
-      website,
-      zoomLink,
       cities,
       hats,
-      frequency,
       creator: currentUser.id,
       isRecurring,
       isMultiday,
@@ -95,6 +102,19 @@ const CreateEvent = ({ navigation }) => {
       // Add endDateTime to the object only if multiple days is enabled.
       ...(isMultiday && {
         endDateTime: endDateTime,
+      }),
+      // Add frequency to the object only if isRecurring is enabled.
+      ...(isRecurring && {
+        frequency: frequency,
+      }),
+      ...(location && {
+        location: location,
+      }),
+      ...(website && {
+        website: website,
+      }),
+      ...(zoomLink && {
+        zoomLink: zoomLink,
       }),
     };
     Object.keys(data).forEach((k) => data[k] == null && delete data[k]);
@@ -284,9 +304,9 @@ const CreateEvent = ({ navigation }) => {
                       title="Multiple Days"
                       onPress={() => {
                         setIsMultiday(true);
-                        let endDateTime = new Date(startDateTime);
-                        endDateTime.setDate(startDateTime.getDate() + 1);
-                        setEndDateTime(endDateTime);
+                        let tmp = new Date(startDateTime);
+                        tmp.setDate(startDateTime.getDate() + 1);
+                        setEndDateTime(tmp);
                       }}
                       style={{ marginRight: 24 }}
                     />

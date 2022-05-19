@@ -55,6 +55,7 @@ const Details = ({ event, blockUser }) => {
         <ExternalLink
           title={"View location"}
           onPress={() =>
+            // FIXME: Not working (tested only on iOS)
             Linking.openURL(event.location).catch((err) => console.log(err))
           }
           icon="map-marker"

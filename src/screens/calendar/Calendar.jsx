@@ -1,5 +1,3 @@
-// TODO: Add end date for multiple day events
-
 import { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { useTheme } from "react-native-paper";
