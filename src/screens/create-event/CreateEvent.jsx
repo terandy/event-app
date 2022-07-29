@@ -31,7 +31,7 @@ import { HATS, CITIES, HAT_COLORS, FREQUENCY_OPTIONS } from "../../data";
 import { AuthContext } from "../../context";
 import { useEffect } from "react/cjs/react.development";
 
-const CreateEvent = ({ navigation }) => {
+const CreateEvent = ({ navigation, route }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (!currentUser)
@@ -42,22 +42,38 @@ const CreateEvent = ({ navigation }) => {
       });
     });
 
+  const event = route.params?.event;
+
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [startDateTime, setStartDateTime] = useState(new Date(Date.now()));
-  const [endDateTime, setEndDateTime] = useState(new Date(Date.now()));
-  const [description, setDescription] = useState();
-  const [title, setTitle] = useState();
-  const [location, setLocation] = useState();
-  const [website, setWebsite] = useState();
-  const [zoomLink, setZoomLink] = useState();
-  const [cities, setCities] = useState([CITIES[0]]);
-  const [hats, setHats] = useState([HATS[0]]);
+  const [startDateTime, setStartDateTime] = useState(
+    new Date(
+      event?.startDateTime
+        ? event.startDateTime.seconds * 1000
+        : event?.dateTime
+        ? event.dateTime.seconds * 1000
+        : Date.now()
+    )
+  );
+  const [endDateTime, setEndDateTime] = useState(
+    new Date(event?.endDateTime ? event.endDateTime.seconds * 1000 : Date.now())
+  );
+  const [description, setDescription] = useState(event?.description ?? "");
+  const [title, setTitle] = useState(event?.title ?? "");
+  const [location, setLocation] = useState(event?.location);
+  const [website, setWebsite] = useState(event?.website);
+  const [zoomLink, setZoomLink] = useState(event?.zoomLink);
+  const [cities, setCities] = useState(event?.cities ?? [CITIES[0]]);
+  const [hats, setHats] = useState(event?.hats ?? ["YSP"]);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [isMultiday, setIsMultiday] = useState(false);
-  const [frequency, setFrequency] = useState("");
+  const [isMultiday, setIsMultiday] = useState(event?.isMultiday ?? false);
+  const [frequency, setFrequency] = useState(event?.frequency);
   const [image, setImage] = useState(null);
+
+  const duplicatePastEvents = () => {
+    navigation.navigate(RS.duplicatePastEvents, { isNewEvent: true });
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -133,6 +149,8 @@ const CreateEvent = ({ navigation }) => {
     return <Loading />;
   }
 
+  console.log(event);
+
   const renderEndDateColumn = () => (
     <View
       style={{
@@ -173,7 +191,7 @@ const CreateEvent = ({ navigation }) => {
               )
             )
           }
-          value={endDateTime}
+          value={new Date(startDateTime ? startDateTime.getDate() : Date.now())}
           mode="date"
           style={{ flex: 1 }}
         />
@@ -211,7 +229,7 @@ const CreateEvent = ({ navigation }) => {
               )
             )
           }
-          value={endDateTime}
+          value={new Date(startDateTime ? startDateTime.getDate() : Date.now())}
           mode="time"
           style={{ flex: 1 }}
         />
@@ -295,7 +313,11 @@ const CreateEvent = ({ navigation }) => {
                         )
                       )
                     }
-                    value={startDateTime}
+                    value={
+                      new Date(
+                        startDateTime ? startDateTime.getDate() : Date.now()
+                      )
+                    }
                     mode="date"
                     style={{ flex: 1 }}
                   />
@@ -338,7 +360,11 @@ const CreateEvent = ({ navigation }) => {
                         )
                       )
                     }
-                    value={startDateTime}
+                    value={
+                      new Date(
+                        startDateTime ? startDateTime.getDate() : Date.now()
+                      )
+                    }
                     mode="time"
                     style={{ flex: 1 }}
                   />
@@ -526,6 +552,15 @@ const CreateEvent = ({ navigation }) => {
             <Button
               title="Save Event"
               onPress={saveEvent}
+              size="small"
+              style={{
+                backgroundColor: colors.t1,
+                marginBottom: 20,
+              }}
+            />
+            <Button
+              title="Duplicate Past Events"
+              onPress={duplicatePastEvents}
               size="small"
               style={{
                 backgroundColor: colors.t1,

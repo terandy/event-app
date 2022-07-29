@@ -30,21 +30,55 @@ export const getTrigger = ({ time, frequency, isRecurring }) => {
           minute: time.getMinutes(),
         };
         break;
+      case "BIWEEKLY":
+        trigger = {
+          repeats: true,
+          weekday: time.getDay() + 2,
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+        };
+        break;
       case "MONTHLY":
-        trigger =
-          Platform.OS === "ios"
-            ? {
-                repeats: true,
-                day: time.getDate(),
-                hour: time.getHours(),
-                minute: time.getMinutes(),
-              }
-            : time;
+        trigger = {
+          repeats: true,
+          month: time.getMonth() + 1,
+          day: time.getDate(),
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+        };
+        break;
+      case "BIMONTHLY":
+        trigger = {
+          repeats: true,
+          month: time.getMonth() + 2,
+          day: time.getDate(),
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+        };
+        break;
+      case "QUARTERLY":
+        trigger = {
+          repeats: true,
+          month: time.getMonth() + 3,
+          day: time.getDate(),
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+        };
+        break;
+      case "SEMIANUALLY":
+        trigger = {
+          repeats: true,
+          month: time.getMonth() + 6,
+          day: time.getDate(),
+          hour: time.getHours(),
+          minute: time.getMinutes(),
+        };
         break;
       case "YEARLY":
         trigger = {
           repeats: true,
-          month: time.getMonth() + 1,
+          year: time.getFullYear() + 1,
+          month: time.getMonth(),
           day: time.getDate(),
           hour: time.getHours(),
           minute: time.getMinutes(),

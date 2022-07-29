@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Text, ScrollView, Platform, Linking } from "react-native";
+import { useTheme } from "react-native-paper";
 
 import { Title, Layout, ExternalLink } from "../../elements";
 import { padding } from "../../theme";
@@ -8,6 +9,8 @@ import { adUnitIds, testAdUnitIds } from "../../services/admob";
 
 const Donate = () => {
   const [error, setError] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const { colors } = useTheme();
 
   const adUnitId =
     Platform.OS === "ios"
@@ -20,6 +23,7 @@ const Donate = () => {
       : // android
         testAdUnitIds.android.interstitial;
   const showInterstitial = async () => {
+    setisLoading(true);
     try {
       await AdMobInterstitial.setAdUnitID(__DEV__ ? testAdUnitId : adUnitId);
       await AdMobInterstitial.requestAdAsync({
@@ -27,11 +31,14 @@ const Donate = () => {
       });
       await AdMobInterstitial.showAdAsync();
     } catch (err) {
+      console.log(err);
       setError(true);
     }
   };
-  const handleWatchAd = () => {
-    showInterstitial();
+  const handleWatchAd = async () => {
+    if (isLoading) return;
+    await showInterstitial();
+    setisLoading(false);
   };
   const message = `Hey There!\nDid you know that donations to YSP covers service activities costs, grant funding to deserving youth and youth projects, and finally maintenance costs for the app and website? All donations above $10 are also eligible for a Tax Receipt too! 
 \n\n\nDonate via the link below! 

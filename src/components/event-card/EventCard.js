@@ -5,48 +5,18 @@ import { NavigationContext } from "@react-navigation/native";
 
 import { AuthContext } from "../../context";
 import { Title, IconButton, Card, HatCircles } from "../../elements";
-import { DAYS_OF_THE_WEEK } from "../../data";
 import { extractDate, extractTime, handleInterestPress } from "../../utils";
+import { getDisplayDateTime } from "../../utils/date-time-functions";
 
 const EventCard = ({ event, style, onPress }) => {
   const { currentUser } = useContext(AuthContext);
   const { colors } = useTheme();
-  const {
-    id,
-    title,
-    description,
-    hats,
-    startDateTime,
-    endDateTime,
-    dateTime,
-    isMultiday,
-    frequency,
-    users,
-    isRecurring,
-  } = event;
-
-  const displayStartDate = extractDate(startDateTime ?? event.dateTime);
-  const displayStartTime = extractTime(startDateTime ?? event.dateTime);
-
-  const displayEndDate = extractDate(endDateTime);
-  const displayEndTime = extractTime(endDateTime);
+  const { title, description, hats, users } = event;
 
   const isInterested =
     users && currentUser ? users.includes(currentUser.id) : false;
 
   const navigation = React.useContext(NavigationContext);
-
-  function getDisplayDateTime() {
-    if (isRecurring) {
-      if (frequency == "WEEKLY") {
-        const dayOfTheWeek =
-          DAYS_OF_THE_WEEK[(startDateTime ?? dateTime).toDate().getDay()];
-        return `Every ${dayOfTheWeek} - ${displayStartTime}`;
-      } else return `${frequency} - ${displayStartDate}`;
-    } else if (isMultiday) {
-      return `From\t${displayStartDate} - ${displayStartTime}\nTo\t\t${displayEndDate} - ${displayEndTime}`;
-    } else return `${displayStartDate} - ${displayStartTime}`;
-  }
 
   return (
     <Card bg={colors.p4} style={style}>
@@ -90,7 +60,7 @@ const EventCard = ({ event, style, onPress }) => {
             />
           </View>
           <Text style={{ color: colors.p2, fontSize: 13 }}>
-            {getDisplayDateTime()}
+            {getDisplayDateTime(event)}
           </Text>
         </View>
         <Text style={{ color: colors.g1, maxHeight: 60 }}>
