@@ -7,6 +7,7 @@ import {
   Platform,
   View,
   Image,
+  StackActions,
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
@@ -38,15 +39,17 @@ import { RS } from "../../strings";
 const EditEvent = ({ navigation, route }) => {
   const { colors } = useTheme();
   const { currentUser } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState(route.params?.event);
+  const [isLoading, setIsLoading] = useState(!event);
 
   const id = route.params?.id;
 
-  // const [date, setDate] = useState(new Date(Date.now()));
-  // const [time, setTime] = useState(new Date(Date.now()));
-  const [startDateTime, setStartDateTime] = useState(new Date(Date.now()));
-  const [endDateTime, setEndDateTime] = useState(new Date(Date.now()));
+  const [startDateTime, setStartDateTime] = useState(
+    new Date(event?.startDateTime ? event?.startDateTime : Date.now())
+  );
+  const [endDateTime, setEndDateTime] = useState(
+    new Date(event?.endDateTime ? event?.endDateTime : Date.now())
+  );
   const [description, setDescription] = useState(event?.description ?? "");
   const [title, setTitle] = useState(event?.title ?? "");
   const [location, setLocation] = useState(event?.location);
@@ -145,7 +148,7 @@ const EditEvent = ({ navigation, route }) => {
         messages: event.messages,
         // Add endDateTime to the object only if multiple days is enabled.
         ...(isMultiday && {
-          endDateTime,
+          endDateTime: new Date(endDateTime),
         }),
         // Add frequency to the object only if isRecurring is enabled.
         ...(isRecurring && {
@@ -164,9 +167,16 @@ const EditEvent = ({ navigation, route }) => {
     }
   };
 
+  const duplicatePastEvents = () => {
+    navigation.navigate(RS.duplicatePastEvents, {
+      id: event.id,
+      isNewEvent: false,
+    });
+  };
+
   useEffect(() => {
-    console.log("id useEffect");
-    if (id) {
+    console.log("id useEffect: " + id);
+    if (id && !event) {
       let unsubscribe = () => {};
       const callback = async () => {
         unsubscribe = await fetchEvent(
@@ -252,7 +262,7 @@ const EditEvent = ({ navigation, route }) => {
               )
             )
           }
-          value={endDateTime}
+          value={endDateTime ?? new Date()}
           mode="date"
           style={{ flex: 1 }}
         />
@@ -290,7 +300,7 @@ const EditEvent = ({ navigation, route }) => {
               )
             )
           }
-          value={endDateTime}
+          value={endDateTime ?? new Date()}
           mode="time"
           style={{ flex: 1 }}
         />
@@ -374,7 +384,7 @@ const EditEvent = ({ navigation, route }) => {
                         )
                       )
                     }
-                    value={startDateTime}
+                    value={startDateTime ?? new Date()}
                     mode="date"
                     style={{ flex: 1 }}
                   />
@@ -418,7 +428,7 @@ const EditEvent = ({ navigation, route }) => {
                         )
                       )
                     }
-                    value={startDateTime}
+                    value={startDateTime ?? new Date()}
                     mode="time"
                     style={{ flex: 1 }}
                   />
@@ -606,6 +616,15 @@ const EditEvent = ({ navigation, route }) => {
             <Button
               title="Save Event"
               onPress={saveEvent}
+              size="small"
+              style={{
+                backgroundColor: colors.t1,
+                marginBottom: 20,
+              }}
+            />
+            <Button
+              title="Duplicate Past Events"
+              onPress={duplicatePastEvents}
               size="small"
               style={{
                 backgroundColor: colors.t1,

@@ -5,6 +5,7 @@ import {
   InfoScreen,
   EventScreen,
   EditEventScreen,
+  DuplicatePastEventsScreen,
   DeleteEventScreen,
   CreateEventScreen,
   Eula,
@@ -48,6 +49,11 @@ function MyNavigator() {
         name={RS.editEvent}
         component={EditEventScreen}
         options={{ title: "Edit Event", hide: true }}
+      />
+      <My.Screen
+        name={RS.duplicatePastEvents}
+        component={DuplicatePastEventsScreen}
+        options={{ title: "Duplicate Past Events", hide: true }}
       />
       <My.Screen
         name={RS.deleteEvent}

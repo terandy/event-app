@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "YSP Canada",
     slug: "ysp-app",
-    version: "1.0.2",
+    version: "1.1.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     splash: {
@@ -19,7 +19,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.terandy.yspapp",
-      buildNumber: "1.5.6",
+      buildNumber: "1.6.0",
       config: {
         googleMobileAdsAppId: "ca-app-pub-2820270410110980~5767285665",
       },
@@ -34,7 +34,7 @@ export default {
         backgroundColor: "#5F40F7",
       },
       package: "com.terandy.yspapp",
-      versionCode: 56,
+      versionCode: 58,
       googleServicesFile: "./google-services.json",
       config: {
         googleMobileAdsAppId: "ca-app-pub-2820270410110980~3829466543",

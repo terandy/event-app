@@ -21,4 +21,5 @@ export const RS = {
   register: "Register",
   login: "Login",
   landing: "Landing",
+  duplicatePastEvents: "Duplicate Past Events",
 };

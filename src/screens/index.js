@@ -8,3 +8,4 @@ export * from "./create-event";
 export * from "./auth";
 export * from "./block-user";
 export * from "./donate";
+export * from "./duplicate-past-events";

@@ -1,13 +1,12 @@
 import { useContext, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useTheme } from "react-native-paper";
-// import Constants from "expo-constants";
 
 import { EventContext, AuthContext } from "../../context";
 import { Button, Title, Layout, Loading } from "../../elements";
 import { EventCard } from "../../components";
 import { RS } from "../../strings";
-import { isSameDay } from "../../utils/extract-date";
+import { isSameDay } from "../../utils/date-time-functions";
 
 function EventListScreen({ navigation }) {
   const { selectedCity, currentUser } = useContext(AuthContext);
@@ -38,8 +37,7 @@ function EventListScreen({ navigation }) {
       event.endDateTime.toDate() >= today;
 
     return (
-      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
-      //  if they aren't logged in.
+      // Users can access content anyway if they aren't logged in...
       (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       (isStartDay || isOtherDayOfMultidayEvent)
@@ -57,8 +55,7 @@ function EventListScreen({ navigation }) {
     const startDateTime = (event.startDateTime ?? event.dateTime).toDate();
 
     return (
-      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
-      //  if they aren't logged in.
+      // Users can access content anyway if they aren't logged in...
       (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       !event.isRecurring &&
@@ -68,8 +65,7 @@ function EventListScreen({ navigation }) {
 
   const recurringEvents = events?.filter((event) => {
     return (
-      // TODO: Ask what to do about this feature of blocked users. Users can access content anyway
-      //  if they aren't logged in.
+      // Users can access content anyway if they aren't logged in...
       (!currentUser || !isBlockedContent(event)) &&
       event.cities.includes(selectedCity) &&
       event.isRecurring
